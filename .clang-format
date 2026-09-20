@@ -1,0 +1,10 @@
+---
+NamespaceIndentation: All
+CompactNamespaces: true
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterNamespace: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+UseTab: Never
+IndentWidth: 4
+EmptyLineAfterAccessModifier: Never

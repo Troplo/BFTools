@@ -1,0 +1,13 @@
+//
+// Created by troplo on 10/14/26.
+//
+
+#ifndef NOMADARCHIVES_FEATURES_H
+#define NOMADARCHIVES_FEATURES_H
+
+#define ENABLE_FAT2 1
+#define ENABLE_FAT3 1
+#define ENABLE_FAT5_WD2 1
+#define ENABLE_FAT5_ORWELL 1
+
+#endif // NOMADARCHIVES_FEATURES_H

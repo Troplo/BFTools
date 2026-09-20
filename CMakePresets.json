@@ -1,0 +1,36 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "linux",
+      "displayName": "Linux",
+      "description": "Linux",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_STATIC": "ON"
+      }
+    },
+    {
+      "name": "windows-amd64",
+      "displayName": "Windows amd64 (Crosscompile)",
+      "description": "Crosscompile for amd64 Windows",
+      "binaryDir": "${sourceDir}/build-win64",
+      "toolchainFile": "${sourceDir}/cmake/toolchain-mingw64.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_STATIC": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux",
+      "configurePreset": "linux"
+    },
+    {
+      "name": "windows-amd64",
+      "configurePreset": "windows-amd64"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+CMakeFiles*
+/build*
+build*/
+cmake-*
+.idea
+aqtinstall.log
+release
+dist*
+/dist*
+*.7z
+*.zip
