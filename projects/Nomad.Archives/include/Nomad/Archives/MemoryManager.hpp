@@ -25,7 +25,7 @@ namespace Nexus {
 
     struct AllocationMonitor {
         std::mutex Mutex;
-        std::unordered_map<void *, AllocationInfo> Allocations;
+        std::unordered_map<void*, AllocationInfo> Allocations;
         std::atomic<uint64_t> CurrentBytes{0};
         std::atomic<uint64_t> PeakBytes{0};
         std::atomic<uint64_t> TotalAllocated{0};
@@ -35,7 +35,7 @@ namespace Nexus {
 
     class MemoryManager {
       public:
-        static MemoryManager &GetInstance() {
+        static MemoryManager& GetInstance() {
             static MemoryManager instance;
             return instance;
         }
@@ -50,19 +50,19 @@ namespace Nexus {
       public:
         MemoryManager();
 #if __DEBUG
-        static void DumpLeaks(AllocationMonitor &monitor,
+        static void DumpLeaks(AllocationMonitor& monitor,
                               std::string_view name);
         static void DumpLeaks();
         static void DumpReport(std::string_view name);
 #endif
         static void ResetPeak();
-        static void AddAllocation(AllocationMonitor &monitor, void *ptr,
+        static void AddAllocation(AllocationMonitor& monitor, void* ptr,
                                   size_t size, size_t alignment = 0,
-                                  const std::source_location &location =
+                                  const std::source_location& location =
                                       std::source_location::current());
-        static bool RemoveAllocation(AllocationMonitor &monitor, void *ptr);
-        static AllocationMonitor &GetTntMonitor() { return m_tntMon; }
-        static AllocationMonitor &GetNomadMonitor() { return m_nomadMon; }
+        static bool RemoveAllocation(AllocationMonitor& monitor, void* ptr);
+        static AllocationMonitor& GetTntMonitor() { return m_tntMon; }
+        static AllocationMonitor& GetNomadMonitor() { return m_nomadMon; }
         static bool IsInsideAllocator() { return m_insideAllocator; }
         static void SetInsideAllocator(bool v) { m_insideAllocator = v; }
         static bool IsReady() {

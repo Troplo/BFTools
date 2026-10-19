@@ -19,11 +19,11 @@ namespace BFView {
         Q_OBJECT
 
       public:
-        explicit MainWindow(QWidget *parent = nullptr);
+        explicit MainWindow(QWidget* parent = nullptr);
         ~MainWindow() override = default;
 
-        void OpenArchiveFile(const QString &path,
-                             const QString &explicitProject = QString());
+        void OpenArchiveFile(const QString& path,
+                             const QString& explicitProject = QString());
         void CloseArchiveFile();
 
       private slots:
@@ -37,20 +37,20 @@ namespace BFView {
         void onNewFolderAction();
         void onDeleteSelectedAction();
         void onShowArchiveInfoAction();
-        void onFilterTextChanged(const QString &text);
-        void onFilesDropped(const QStringList &filePaths,
-                            const QString &targetFolderRelPath);
-        void onArchiveFileDropped(const QString &fatPath);
-        void onRequestDragOut(const Nomad::Archives::ArchiveNode *node);
+        void onFilterTextChanged(const QString& text);
+        void onFilesDropped(const QStringList& filePaths,
+                            const QString& targetFolderRelPath);
+        void onArchiveFileDropped(const QString& fatPath);
+        void onRequestDragOut(const Nomad::Archives::ArchiveNode* node);
         void onRequestDragOutNodes(
-            const std::vector<const Nomad::Archives::ArchiveNode *> &nodes);
-        void onRequestExtractNode(const Nomad::Archives::ArchiveNode *node);
+            const std::vector<const Nomad::Archives::ArchiveNode*>& nodes);
+        void onRequestExtractNode(const Nomad::Archives::ArchiveNode* node);
         void onRequestExtractNodes(
-            const std::vector<const Nomad::Archives::ArchiveNode *> &nodes);
-        void onRequestDeleteNode(const Nomad::Archives::ArchiveNode *node);
+            const std::vector<const Nomad::Archives::ArchiveNode*>& nodes);
+        void onRequestDeleteNode(const Nomad::Archives::ArchiveNode* node);
         void onRequestDeleteNodes(
-            const std::vector<const Nomad::Archives::ArchiveNode *> &nodes);
-        void onRequestOpenFile(const Nomad::Archives::ArchiveNode *node,
+            const std::vector<const Nomad::Archives::ArchiveNode*>& nodes);
+        void onRequestOpenFile(const Nomad::Archives::ArchiveNode* node,
                                bool bypassCustomHandler, bool openWithChooser);
         void onSyncGenerateNfoAction();
         void onConfigureSettingsAction();
@@ -60,17 +60,17 @@ namespace BFView {
         void onBackAction();
         void onForwardAction();
         void onUpAction();
-        void onFolderChanged(const QString &fullPath);
+        void onFolderChanged(const QString& fullPath);
 
       protected:
-        void closeEvent(QCloseEvent *event) override;
+        void closeEvent(QCloseEvent* event) override;
 
       private:
         void setupUi();
         void performExtraction(
-            const std::vector<const Nomad::Archives::ArchiveEntry *>
-                &entriesToExtract,
-            const QString &destinationDir);
+            const std::vector<const Nomad::Archives::ArchiveEntry*>&
+                entriesToExtract,
+            const QString& destinationDir);
         void saveArchive();
         void updateNavigationButtons();
         void updateWindowTitle();
@@ -83,17 +83,17 @@ namespace BFView {
         Models::NavigationHistory m_navHistory;
         bool m_isNavigatingHistory{false};
 
-        QToolBar *m_toolBar{nullptr};
-        QAction *m_actBack{nullptr};
-        QAction *m_actForward{nullptr};
-        QAction *m_actUp{nullptr};
+        QToolBar* m_toolBar{nullptr};
+        QAction* m_actBack{nullptr};
+        QAction* m_actForward{nullptr};
+        QAction* m_actUp{nullptr};
 
-        QAction *m_actThemeSystem{nullptr};
-        QAction *m_actThemeBreezeLight{nullptr};
-        QAction *m_actThemeBreezeDark{nullptr};
+        QAction* m_actThemeSystem{nullptr};
+        QAction* m_actThemeBreezeLight{nullptr};
+        QAction* m_actThemeBreezeDark{nullptr};
 
-        QLineEdit *m_searchEdit{nullptr};
-        Views::FileManagerView *m_fileManagerView{nullptr};
+        QLineEdit* m_searchEdit{nullptr};
+        Views::FileManagerView* m_fileManagerView{nullptr};
         bool m_isLoadingArchive{false};
     };
 

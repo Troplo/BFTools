@@ -14,10 +14,10 @@ namespace BFView {
         ~XbtFileHandler() override = default;
 
         QString GetName() const override { return "XBT Texture Handler"; }
-        bool CanHandle(const QString &fileName,
-                       const QByteArray &fileData) const override;
-        bool OpenFile(const QString &fileName, const QByteArray &fileData,
-                      const QString &tempDir) override;
+        bool CanHandle(const QString& fileName,
+                       const QByteArray& fileData) const override;
+        bool OpenFile(const QString& fileName, const QByteArray& fileData,
+                      const QString& tempDir) override;
     };
 
 } // namespace BFView

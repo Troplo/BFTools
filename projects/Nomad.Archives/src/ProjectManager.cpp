@@ -68,12 +68,12 @@ namespace Nomad::Archives {
         return {};
     }
 
-    ProjectManager &ProjectManager::GetInstance() {
+    ProjectManager& ProjectManager::GetInstance() {
         static ProjectManager instance;
         return instance;
     }
 
-    void ProjectManager::SetProjectsRoot(const std::filesystem::path &path) {
+    void ProjectManager::SetProjectsRoot(const std::filesystem::path& path) {
         m_customProjectsRoot = path;
         m_cachedProjects.clear();
     }
@@ -91,7 +91,7 @@ namespace Nomad::Archives {
         // 2. Return first candidate project root that actually exists and is a
         // directory
         auto candidates = GetCandidateProjectRoots();
-        for (const auto &candidate : candidates) {
+        for (const auto& candidate : candidates) {
             std::error_code ec;
             if (std::filesystem::exists(candidate, ec) &&
                 std::filesystem::is_directory(candidate, ec)) {
@@ -108,11 +108,11 @@ namespace Nomad::Archives {
     }
 
     std::vector<std::filesystem::path> ProjectManager::GetCandidateProjectRoots(
-        const std::filesystem::path &workspaceRoot) const {
+        const std::filesystem::path& workspaceRoot) const {
         std::vector<std::filesystem::path> candidates;
         std::set<std::string> seen;
 
-        auto addCandidate = [&](const std::filesystem::path &p) {
+        auto addCandidate = [&](const std::filesystem::path& p) {
             if (p.empty())
                 return;
             std::error_code ec;
@@ -172,13 +172,13 @@ namespace Nomad::Archives {
     }
 
     std::vector<std::string> ProjectManager::GetAvailableProjects(
-        const std::filesystem::path &workspaceRoot) const {
+        const std::filesystem::path& workspaceRoot) const {
         std::set<std::string> projectNames;
         auto roots = GetCandidateProjectRoots(workspaceRoot);
 
-        for (const auto &root : roots) {
+        for (const auto& root : roots) {
             std::error_code ec;
-            for (const auto &entry :
+            for (const auto& entry :
                  std::filesystem::directory_iterator(root, ec)) {
                 if (!entry.is_directory(ec))
                     continue;
@@ -194,7 +194,7 @@ namespace Nomad::Archives {
                 bool hasAnyFilelist = false;
 
                 if (!hasFilelist) {
-                    for (const auto &subEntry :
+                    for (const auto& subEntry :
                          std::filesystem::directory_iterator(entry.path(),
                                                              ec)) {
                         if (subEntry.is_regular_file(ec)) {
@@ -222,8 +222,8 @@ namespace Nomad::Archives {
     }
 
     std::filesystem::path ProjectManager::GetProjectPath(
-        const std::string &name,
-        const std::filesystem::path &workspaceRoot) const {
+        const std::string& name,
+        const std::filesystem::path& workspaceRoot) const {
         if (name.empty())
             return {};
 
@@ -238,7 +238,7 @@ namespace Nomad::Archives {
         auto roots = GetCandidateProjectRoots(workspaceRoot);
 
         // Pass 1: exact match
-        for (const auto &root : roots) {
+        for (const auto& root : roots) {
             auto candidate = root / name;
             if (std::filesystem::exists(candidate, ec) &&
                 std::filesystem::is_directory(candidate, ec)) {
@@ -248,11 +248,11 @@ namespace Nomad::Archives {
 
         // Pass 2: case-insensitive match (helpful on Linux or case-mismatched
         // CLI inputs)
-        for (const auto &root : roots) {
+        for (const auto& root : roots) {
             if (!std::filesystem::exists(root, ec) ||
                 !std::filesystem::is_directory(root, ec))
                 continue;
-            for (const auto &entry :
+            for (const auto& entry :
                  std::filesystem::directory_iterator(root, ec)) {
                 if (entry.is_directory(ec)) {
                     std::string folder = entry.path().filename().string();
@@ -275,8 +275,8 @@ namespace Nomad::Archives {
     }
 
     std::shared_ptr<ProjectConfig>
-    ProjectManager::GetProject(const std::string &name,
-                               const std::filesystem::path &workspaceRoot) {
+    ProjectManager::GetProject(const std::string& name,
+                               const std::filesystem::path& workspaceRoot) {
         if (name.empty())
             return nullptr;
 

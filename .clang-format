@@ -8,3 +8,4 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 UseTab: Never
 IndentWidth: 4
 EmptyLineAfterAccessModifier: Never
+PointerAlignment: Left

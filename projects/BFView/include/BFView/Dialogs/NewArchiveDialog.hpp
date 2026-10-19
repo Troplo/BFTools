@@ -18,7 +18,7 @@ namespace BFView::Dialogs {
         Q_OBJECT
 
       public:
-        explicit NewArchiveDialog(QWidget *parent = nullptr);
+        explicit NewArchiveDialog(QWidget* parent = nullptr);
         ~NewArchiveDialog() override = default;
 
         [[nodiscard]] QString GetFatPath() const;
@@ -35,13 +35,13 @@ namespace BFView::Dialogs {
         void OnAccept();
 
       private:
-        QLineEdit *m_pathEdit{nullptr};
-        QPushButton *m_browseButton{nullptr};
-        QComboBox *m_versionCombo{nullptr};
-        QSpinBox *m_rawVersionSpin{nullptr};
-        QComboBox *m_platformCombo{nullptr};
-        QComboBox *m_compressionCombo{nullptr};
-        QComboBox *m_projectCombo{nullptr};
+        QLineEdit* m_pathEdit{nullptr};
+        QPushButton* m_browseButton{nullptr};
+        QComboBox* m_versionCombo{nullptr};
+        QSpinBox* m_rawVersionSpin{nullptr};
+        QComboBox* m_platformCombo{nullptr};
+        QComboBox* m_compressionCombo{nullptr};
+        QComboBox* m_projectCombo{nullptr};
     };
 
 } // namespace BFView::Dialogs

@@ -85,9 +85,9 @@ namespace Nomad::Archives {
 
     bool ValidateArchiveEntries(std::string_view archiveName,
                                 uint32_t rawVersion,
-                                const std::vector<ArchiveEntry> &entries,
-                                const ArchiveCapacityLimits &limits,
-                                std::string &errorMsg);
+                                const std::vector<ArchiveEntry>& entries,
+                                const ArchiveCapacityLimits& limits,
+                                std::string& errorMsg);
 
     std::string_view PlatformToString(Platform platform);
     std::string_view CompressionToString(CompressionScheme compression);

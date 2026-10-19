@@ -17,20 +17,20 @@ namespace BFView::Dialogs {
         Q_OBJECT
 
       public:
-        explicit DefragProgressDialog(QWidget *parent = nullptr);
+        explicit DefragProgressDialog(QWidget* parent = nullptr);
         ~DefragProgressDialog() override = default;
 
         void SetStatus(int current, int total,
-                       const QString &details = QString());
+                       const QString& details = QString());
         [[nodiscard]] std::shared_ptr<std::atomic<bool>> GetCancelFlag() const {
             return m_cancelFlag;
         }
 
       private:
-        QProgressBar *m_progressBar{nullptr};
-        QLabel *m_lblStatus{nullptr};
-        QLabel *m_lblDetails{nullptr};
-        QPushButton *m_btnCancel{nullptr};
+        QProgressBar* m_progressBar{nullptr};
+        QLabel* m_lblStatus{nullptr};
+        QLabel* m_lblDetails{nullptr};
+        QPushButton* m_btnCancel{nullptr};
         std::shared_ptr<std::atomic<bool>> m_cancelFlag;
     };
 

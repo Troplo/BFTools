@@ -17,7 +17,7 @@
 #include <fstream>
 
 namespace BFView {
-    FileHandlerManager &FileHandlerManager::GetInstance() {
+    FileHandlerManager& FileHandlerManager::GetInstance() {
         static FileHandlerManager instance;
         return instance;
     }
@@ -33,10 +33,10 @@ namespace BFView {
         }
     }
 
-    IFileHandler *
-    FileHandlerManager::FindHandler(const QString &fileName,
-                                    const QByteArray &fileData) const {
-        for (const auto &handler : m_handlers) {
+    IFileHandler*
+    FileHandlerManager::FindHandler(const QString& fileName,
+                                    const QByteArray& fileData) const {
+        for (const auto& handler : m_handlers) {
             if (handler->CanHandle(fileName, fileData)) {
                 return handler.get();
             }
@@ -45,7 +45,7 @@ namespace BFView {
     }
 
     bool FileHandlerManager::OpenFile(
-        const QString &fatPath, const Nomad::Archives::ArchiveEntry &entry,
+        const QString& fatPath, const Nomad::Archives::ArchiveEntry& entry,
         bool bypassCustomHandler, bool openWithChooser) {
         std::filesystem::path datPath = fatPath.toStdString();
         datPath.replace_extension(".dat");
@@ -89,7 +89,7 @@ namespace BFView {
             SettingsManager::GetInstance().GetUseCustomHandlers() &&
             !bypassCustomHandler;
         if (useCustom) {
-            IFileHandler *handler = FindHandler(fileName, fileData);
+            IFileHandler* handler = FindHandler(fileName, fileData);
             if (handler) {
                 return handler->OpenFile(fileName, fileData, tempDir);
             }

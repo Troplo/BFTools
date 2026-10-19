@@ -27,19 +27,19 @@ namespace BFView::Models {
 
         explicit ArchiveTreeModel(
             std::shared_ptr<Nomad::Archives::ArchiveNode> root,
-            QObject *parent = nullptr);
+            QObject* parent = nullptr);
         ~ArchiveTreeModel() override = default;
 
         [[nodiscard]] QModelIndex
         index(int row, int column,
-              const QModelIndex &parent = QModelIndex()) const override;
+              const QModelIndex& parent = QModelIndex()) const override;
         [[nodiscard]] QModelIndex
-        parent(const QModelIndex &child) const override;
+        parent(const QModelIndex& child) const override;
         [[nodiscard]] int
-        rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        rowCount(const QModelIndex& parent = QModelIndex()) const override;
         [[nodiscard]] int
-        columnCount(const QModelIndex &parent = QModelIndex()) const override;
-        [[nodiscard]] QVariant data(const QModelIndex &index,
+        columnCount(const QModelIndex& parent = QModelIndex()) const override;
+        [[nodiscard]] QVariant data(const QModelIndex& index,
                                     int role = Qt::DisplayRole) const override;
         [[nodiscard]] QVariant
         headerData(int section, Qt::Orientation orientation,
@@ -50,8 +50,8 @@ namespace BFView::Models {
         GetRootNode() const {
             return m_root;
         }
-        [[nodiscard]] const Nomad::Archives::ArchiveNode *
-        NodeFromIndex(const QModelIndex &index) const;
+        [[nodiscard]] const Nomad::Archives::ArchiveNode*
+        NodeFromIndex(const QModelIndex& index) const;
 
       private:
         std::shared_ptr<Nomad::Archives::ArchiveNode> m_root;

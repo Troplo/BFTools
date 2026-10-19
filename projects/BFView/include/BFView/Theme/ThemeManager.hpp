@@ -15,14 +15,14 @@ namespace BFView {
     class ThemeManager : public QObject {
         Q_OBJECT
       public:
-        static ThemeManager &GetInstance();
+        static ThemeManager& GetInstance();
 
         AppTheme GetCurrentTheme() const { return m_currentTheme; }
         void ApplyTheme(AppTheme theme);
-        void ApplyTheme(const QString &themeName);
+        void ApplyTheme(const QString& themeName);
 
         static QString ThemeToString(AppTheme theme);
-        static AppTheme ThemeFromString(const QString &str);
+        static AppTheme ThemeFromString(const QString& str);
 
       signals:
         void ThemeChanged(AppTheme newTheme);

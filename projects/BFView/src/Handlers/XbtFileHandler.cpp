@@ -11,8 +11,8 @@
 #include <QUrl>
 
 namespace BFView {
-    bool XbtFileHandler::CanHandle(const QString &fileName,
-                                   const QByteArray &fileData) const {
+    bool XbtFileHandler::CanHandle(const QString& fileName,
+                                   const QByteArray& fileData) const {
         if (fileName.endsWith(".xbt", Qt::CaseInsensitive)) {
             return true;
         }
@@ -27,9 +27,9 @@ namespace BFView {
         return false;
     }
 
-    bool XbtFileHandler::OpenFile(const QString &fileName,
-                                  const QByteArray &fileData,
-                                  const QString &tempDir) {
+    bool XbtFileHandler::OpenFile(const QString& fileName,
+                                  const QByteArray& fileData,
+                                  const QString& tempDir) {
         QDir().mkpath(tempDir);
 
         QFileInfo fileInfo(fileName);

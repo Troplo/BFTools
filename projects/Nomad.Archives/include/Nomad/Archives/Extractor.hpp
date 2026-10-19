@@ -15,29 +15,29 @@
 
 namespace Nomad::Archives {
     using ProgressCallback = std::function<void(
-        size_t current, size_t total, const std::string &currentFile)>;
+        size_t current, size_t total, const std::string& currentFile)>;
 
     class Extractor {
       public:
-        static bool ExtractEntry(const ArchiveEntry &entry,
-                                 std::istream &datStream,
-                                 const std::filesystem::path &outputFilePath);
-        static bool ExtractAll(const IArchive &archive,
-                               const std::filesystem::path &fatPath,
-                               const std::filesystem::path &outputDir,
+        static bool ExtractEntry(const ArchiveEntry& entry,
+                                 std::istream& datStream,
+                                 const std::filesystem::path& outputFilePath);
+        static bool ExtractAll(const IArchive& archive,
+                               const std::filesystem::path& fatPath,
+                               const std::filesystem::path& outputDir,
                                ProgressCallback progress = nullptr,
                                size_t numThreads = 0);
-        static bool ExtractAll(const IArchive &archive, std::istream &datStream,
-                               const std::filesystem::path &outputDir,
+        static bool ExtractAll(const IArchive& archive, std::istream& datStream,
+                               const std::filesystem::path& outputDir,
                                ProgressCallback progress = nullptr,
                                size_t numThreads = 0);
         static bool
-        ExtractEntries(const std::vector<const ArchiveEntry *> &entries,
-                       const std::filesystem::path &datPath,
-                       const std::filesystem::path &outputDir,
+        ExtractEntries(const std::vector<const ArchiveEntry*>& entries,
+                       const std::filesystem::path& datPath,
+                       const std::filesystem::path& outputDir,
                        ProgressCallback progress = nullptr,
                        size_t numThreads = 0,
-                       const std::atomic<bool> *cancelFlag = nullptr);
+                       const std::atomic<bool>* cancelFlag = nullptr);
     };
 
 } // namespace Nomad::Archives

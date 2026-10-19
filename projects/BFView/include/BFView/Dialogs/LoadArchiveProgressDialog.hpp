@@ -14,16 +14,16 @@ namespace BFView::Dialogs {
         Q_OBJECT
 
       public:
-        explicit LoadArchiveProgressDialog(QWidget *parent = nullptr);
+        explicit LoadArchiveProgressDialog(QWidget* parent = nullptr);
         ~LoadArchiveProgressDialog() override = default;
 
-        void SetArchiveName(const QString &name);
-        void SetStatus(const QString &status);
+        void SetArchiveName(const QString& name);
+        void SetStatus(const QString& status);
 
       private:
-        QLabel *m_lblTitle{nullptr};
-        QLabel *m_lblStatus{nullptr};
-        QProgressBar *m_progressBar{nullptr};
+        QLabel* m_lblTitle{nullptr};
+        QLabel* m_lblStatus{nullptr};
+        QProgressBar* m_progressBar{nullptr};
     };
 
 } // namespace BFView::Dialogs

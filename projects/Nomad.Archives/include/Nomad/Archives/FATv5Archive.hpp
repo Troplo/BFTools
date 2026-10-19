@@ -63,40 +63,40 @@ namespace Nomad::Archives {
 
         [[nodiscard]] uint64_t GetArchiveHash() const { return m_archiveHash; }
         void SetArchiveHash(uint64_t hash) { m_archiveHash = hash; }
-        [[nodiscard]] const std::vector<FatItem> &GetDependencies() const {
+        [[nodiscard]] const std::vector<FatItem>& GetDependencies() const {
             return m_dependencies;
         }
-        [[nodiscard]] std::vector<FatItem> &GetDependencies() {
+        [[nodiscard]] std::vector<FatItem>& GetDependencies() {
             return m_dependencies;
         }
-        [[nodiscard]] const std::vector<ExtendedFat> &GetDuplicates() const {
+        [[nodiscard]] const std::vector<ExtendedFat>& GetDuplicates() const {
             return m_duplicates;
         }
-        [[nodiscard]] std::vector<ExtendedFat> &GetDuplicates() {
+        [[nodiscard]] std::vector<ExtendedFat>& GetDuplicates() {
             return m_duplicates;
         }
-        [[nodiscard]] const std::vector<FatLocalization> &
+        [[nodiscard]] const std::vector<FatLocalization>&
         GetLocalizations() const {
             return m_localizations;
         }
-        [[nodiscard]] std::vector<FatLocalization> &GetLocalizations() {
+        [[nodiscard]] std::vector<FatLocalization>& GetLocalizations() {
             return m_localizations;
         }
 
-        [[nodiscard]] const std::vector<ArchiveEntry> &
+        [[nodiscard]] const std::vector<ArchiveEntry>&
         GetEntries() const override {
             return m_entries;
         }
-        [[nodiscard]] std::vector<ArchiveEntry> &GetEntries() override {
+        [[nodiscard]] std::vector<ArchiveEntry>& GetEntries() override {
             return m_entries;
         }
 
-        bool Read(std::istream &stream) override;
-        bool Write(std::ostream &stream) const override;
-        bool SerializeNfo(std::ostream &stream) const override;
+        bool Read(std::istream& stream) override;
+        bool Write(std::ostream& stream) const override;
+        bool SerializeNfo(std::ostream& stream) const override;
 
         [[nodiscard]] ArchiveCapacityLimits GetCapacityLimits() const override;
-        [[nodiscard]] bool Validate(std::string &errorMsg) const override;
+        [[nodiscard]] bool Validate(std::string& errorMsg) const override;
 
         [[nodiscard]] uint64_t
         ComputeNameHash(std::string_view name) const override;
@@ -111,7 +111,7 @@ namespace Nomad::Archives {
         [[nodiscard]] uint8_t
         FromCompressionScheme(CompressionScheme scheme) const override;
 
-        void AddOrUpdateEntry(const std::string &path,
+        void AddOrUpdateEntry(const std::string& path,
                               uint64_t uncompressedSize,
                               uint64_t compressedSize,
                               CompressionScheme compression,

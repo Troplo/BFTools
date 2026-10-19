@@ -65,7 +65,7 @@
     uint8_t tbl##_len[LZX_##tbl##_MAXSYMBOLS + LZX_LENTABLE_SAFETY]
 
 struct lzx_state {
-    uint8_t *window;          /* the actual decoding window              */
+    uint8_t* window;          /* the actual decoding window              */
     uint32_t window_size;     /* window size (32Kb through 2Mb)          */
     uint32_t actual_size;     /* window size when it was first allocated */
     uint32_t window_posn;     /* current offset within the window        */
@@ -154,8 +154,8 @@ static const uint32_t position_base[51] = {
     786432,  917504,  1048576, 1179648, 1310720, 1441792, 1572864, 1703936,
     1835008, 1966080, 2097152};
 
-struct lzx_state *lzx_init(int window) {
-    struct lzx_state *pState = NULL;
+struct lzx_state* lzx_init(int window) {
+    struct lzx_state* pState = NULL;
     uint32_t wndsize = 1 << window;
     int i, posn_slots;
 
@@ -165,8 +165,8 @@ struct lzx_state *lzx_init(int window) {
         return NULL;
 
     /* allocate state and associated window */
-    pState = (struct lzx_state *)malloc(sizeof(struct lzx_state));
-    if (!pState || !(pState->window = (uint8_t *)malloc(wndsize))) {
+    pState = (struct lzx_state*)malloc(sizeof(struct lzx_state));
+    if (!pState || !(pState->window = (uint8_t*)malloc(wndsize))) {
         free(pState);
         return NULL;
     }
@@ -205,7 +205,7 @@ struct lzx_state *lzx_init(int window) {
     return pState;
 }
 
-void lzx_teardown(struct lzx_state *pState) {
+void lzx_teardown(struct lzx_state* pState) {
     if (pState) {
         if (pState->window)
             free(pState->window);
@@ -213,7 +213,7 @@ void lzx_teardown(struct lzx_state *pState) {
     }
 }
 
-void lzx_reset(struct lzx_state *pState) {
+void lzx_reset(struct lzx_state* pState) {
     int i;
 
     pState->R0 = pState->R1 = pState->R2 = 1;
@@ -234,7 +234,7 @@ void lzx_reset(struct lzx_state *pState) {
     }
 }
 
-void lzx_set_header_read(struct lzx_state *pState, int headerRead) {
+void lzx_set_header_read(struct lzx_state* pState, int headerRead) {
     if (pState) {
         pState->header_read = headerRead;
     }
@@ -357,8 +357,8 @@ void lzx_set_header_read(struct lzx_state *pState, int headerRead) {
  *
  * Returns 0 for OK or 1 for error
  */
-static int make_decode_table(uint32_t nsyms, uint32_t nbits, uint8_t *length,
-                             uint16_t *table) {
+static int make_decode_table(uint32_t nsyms, uint32_t nbits, uint8_t* length,
+                             uint16_t* table) {
     uint16_t sym;
     uint32_t leaf;
     uint8_t bit_num = 1;
@@ -447,18 +447,18 @@ static int make_decode_table(uint32_t nsyms, uint32_t nbits, uint8_t *length,
 struct lzx_bits {
     uint32_t bb;
     int bl;
-    uint8_t *ip;
+    uint8_t* ip;
 };
 
-static int lzx_read_lens(struct lzx_state *pState, uint8_t *lens,
-                         uint32_t first, uint32_t last, struct lzx_bits *lb) {
+static int lzx_read_lens(struct lzx_state* pState, uint8_t* lens,
+                         uint32_t first, uint32_t last, struct lzx_bits* lb) {
     uint32_t i, j, x, y;
     int z;
 
     uint32_t bitbuf = lb->bb;
     int bitsleft = lb->bl;
-    uint8_t *inpos = lb->ip;
-    uint16_t *hufftbl;
+    uint8_t* inpos = lb->ip;
+    uint16_t* hufftbl;
 
     for (x = 0; x < 20; x++) {
         READ_BITS(y, 4);
@@ -501,12 +501,12 @@ static int lzx_read_lens(struct lzx_state *pState, uint8_t *lens,
     return 0;
 }
 
-int lzx_decompress(struct lzx_state *pState, unsigned char *inpos,
-                   unsigned char *outpos, int inlen, int outlen) {
-    uint8_t *endinp = inpos + inlen;
-    uint8_t *window = pState->window;
+int lzx_decompress(struct lzx_state* pState, unsigned char* inpos,
+                   unsigned char* outpos, int inlen, int outlen) {
+    uint8_t* endinp = inpos + inlen;
+    uint8_t* window = pState->window;
     uint8_t *runsrc, *rundest;
-    uint16_t *hufftbl; /* used in READ_HUFFSYM macro as chosen decoding table */
+    uint16_t* hufftbl; /* used in READ_HUFFSYM macro as chosen decoding table */
 
     uint32_t window_posn = pState->window_posn;
     uint32_t window_size = pState->window_size;
@@ -801,8 +801,8 @@ int lzx_decompress(struct lzx_state *pState, unsigned char *inpos,
         if (outlen <= 6 || !pState->intel_started) {
             pState->intel_curpos += outlen;
         } else {
-            uint8_t *data = outpos;
-            uint8_t *dataend = data + outlen - 10;
+            uint8_t* data = outpos;
+            uint8_t* dataend = data + outlen - 10;
             int32_t curpos = pState->intel_curpos;
             int32_t filesize = pState->intel_filesize;
             int32_t abs_off, rel_off;
@@ -833,7 +833,7 @@ int lzx_decompress(struct lzx_state *pState, unsigned char *inpos,
 }
 
 #ifdef LZX_CHM_TESTDRIVER
-int main(int c, char **v) {
+int main(int c, char** v) {
     FILE *fin, *fout;
     struct lzx_state state;
     uint8_t ibuf[16384];

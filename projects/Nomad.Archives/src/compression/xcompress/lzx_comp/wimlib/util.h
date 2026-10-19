@@ -13,7 +13,7 @@
 
 /* Cast a pointer to a struct member to a pointer to the containing struct.  */
 #define container_of(ptr, type, member)                                        \
-    ((type *)((char *)(ptr) - offsetof(type, member)))
+    ((type*)((char*)(ptr) - offsetof(type, member)))
 
 /* Calculate 'n / d', but round up instead of down.  */
 #define DIV_ROUND_UP(n, d) (((n) + (d) - 1) / (d))
@@ -43,24 +43,24 @@
  *******************/
 
 #include <stdlib.h>
-static inline void *wimlib_malloc(size_t size) { return malloc(size); }
-static inline void wimlib_free_memory(void *p) { free(p); }
+static inline void* wimlib_malloc(size_t size) { return malloc(size); }
+static inline void wimlib_free_memory(void* p) { free(p); }
 
-void *wimlib_realloc(void *ptr, size_t size);
+void* wimlib_realloc(void* ptr, size_t size);
 
-void *wimlib_calloc(size_t nmemb, size_t size);
+void* wimlib_calloc(size_t nmemb, size_t size);
 
-char *wimlib_strdup(const char *str);
+char* wimlib_strdup(const char* str);
 
 #ifdef _WIN32
-wchar_t *wimlib_wcsdup(const wchar_t *str);
+wchar_t* wimlib_wcsdup(const wchar_t* str);
 #endif
 
-void *wimlib_aligned_malloc(size_t size, size_t alignment);
+void* wimlib_aligned_malloc(size_t size, size_t alignment);
 
-void wimlib_aligned_free(void *ptr);
+void wimlib_aligned_free(void* ptr);
 
-void *memdup(const void *mem, size_t size);
+void* memdup(const void* mem, size_t size);
 
 #define MALLOC wimlib_malloc
 #define FREE wimlib_free_memory
@@ -76,16 +76,16 @@ void *memdup(const void *mem, size_t size);
  *******************/
 
 #ifndef HAVE_MEMPCPY
-void *mempcpy(void *dst, const void *src, size_t n);
+void* mempcpy(void* dst, const void* src, size_t n);
 #endif
 
 /**************************
  * Random number generation
  **************************/
 
-void get_random_bytes(void *p, size_t n);
+void get_random_bytes(void* p, size_t n);
 
-void get_random_alnum_chars(tchar *p, size_t n);
+void get_random_alnum_chars(tchar* p, size_t n);
 
 /************************
  * Hashing and comparison

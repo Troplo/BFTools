@@ -15,20 +15,20 @@
 
 namespace Nomad::Archives {
     bool ArchiveModifier::AppendFile(
-        const std::filesystem::path &fatPath, IArchive &archive,
-        const std::string &archiveRelPath,
-        const std::filesystem::path &sourceFilePath, CompressionScheme scheme,
-        std::string &errorMsg) {
+        const std::filesystem::path& fatPath, IArchive& archive,
+        const std::string& archiveRelPath,
+        const std::filesystem::path& sourceFilePath, CompressionScheme scheme,
+        std::string& errorMsg) {
         std::vector<FileToAdd> files = {{archiveRelPath, sourceFilePath}};
         return AppendFiles(fatPath, archive, files, scheme, errorMsg, nullptr);
     }
 
     bool ArchiveModifier::AppendFiles(
-        const std::filesystem::path &fatPath, IArchive &archive,
-        const std::vector<FileToAdd> &files, CompressionScheme scheme,
-        std::string &errorMsg,
-        const std::function<void(size_t current, size_t total)>
-            &progressCallback) {
+        const std::filesystem::path& fatPath, IArchive& archive,
+        const std::vector<FileToAdd>& files, CompressionScheme scheme,
+        std::string& errorMsg,
+        const std::function<void(size_t current, size_t total)>&
+            progressCallback) {
         errorMsg.clear();
 
         if (files.empty()) {
@@ -37,7 +37,7 @@ namespace Nomad::Archives {
 
         const auto limits = archive.GetCapacityLimits();
 
-        for (const auto &file : files) {
+        for (const auto& file : files) {
             std::error_code ec;
             if (!std::filesystem::is_regular_file(file.sourceFilePath, ec)) {
                 errorMsg =
@@ -97,7 +97,7 @@ namespace Nomad::Archives {
         for (size_t i = 0; i < files.size(); ++i) {
             futures.push_back(pool.Enqueue([&files, i, scheme, &limits,
                                             &archive]() -> ProcessedFile {
-                const auto &file = files[i];
+                const auto& file = files[i];
                 ProcessedFile pf;
                 pf.index = i;
                 pf.archiveRelPath = file.archiveRelPath;
@@ -139,9 +139,8 @@ namespace Nomad::Archives {
 
                 std::vector<uint8_t> uncompressedData(uncompressedSize);
                 if (uncompressedSize > 0) {
-                    srcIn.read(
-                        reinterpret_cast<char *>(uncompressedData.data()),
-                        uncompressedSize);
+                    srcIn.read(reinterpret_cast<char*>(uncompressedData.data()),
+                               uncompressedSize);
                     if (static_cast<uint64_t>(srcIn.gcount()) !=
                         uncompressedSize) {
                         pf.errorMsg =
@@ -225,7 +224,7 @@ namespace Nomad::Archives {
             uint64_t entryOffset = alignedOffset;
             if (!pf.payloadData.empty()) {
                 datStream.write(
-                    reinterpret_cast<const char *>(pf.payloadData.data()),
+                    reinterpret_cast<const char*>(pf.payloadData.data()),
                     pf.payloadData.size());
             }
 
@@ -245,12 +244,12 @@ namespace Nomad::Archives {
     }
 
     bool ArchiveModifier::MergeArchive(
-        const std::filesystem::path &targetFatPath, IArchive &targetArchive,
-        const std::filesystem::path &sourceFatPath,
-        const IArchive &sourceArchive, size_t &outMergedCount,
-        std::string &errorMsg,
-        const std::function<void(size_t current, size_t total)>
-            &progressCallback) {
+        const std::filesystem::path& targetFatPath, IArchive& targetArchive,
+        const std::filesystem::path& sourceFatPath,
+        const IArchive& sourceArchive, size_t& outMergedCount,
+        std::string& errorMsg,
+        const std::function<void(size_t current, size_t total)>&
+            progressCallback) {
         errorMsg.clear();
         outMergedCount = 0;
 
@@ -286,11 +285,11 @@ namespace Nomad::Archives {
 
         tgtDat.seekp(0, std::ios::end);
 
-        const auto &srcEntries = sourceArchive.GetEntries();
+        const auto& srcEntries = sourceArchive.GetEntries();
         std::vector<uint8_t> buffer;
 
         for (size_t i = 0; i < srcEntries.size(); ++i) {
-            const auto &entry = srcEntries[i];
+            const auto& entry = srcEntries[i];
             if (entry.is_directory)
                 continue;
 
@@ -301,7 +300,7 @@ namespace Nomad::Archives {
             srcDat.seekg(entry.offset);
             buffer.resize(dataSize);
             if (dataSize > 0) {
-                srcDat.read(reinterpret_cast<char *>(buffer.data()), dataSize);
+                srcDat.read(reinterpret_cast<char*>(buffer.data()), dataSize);
                 if (static_cast<uint64_t>(srcDat.gcount()) != dataSize) {
                     errorMsg = "Failed to read entry payload from source DAT "
                                "at offset " +
@@ -319,7 +318,7 @@ namespace Nomad::Archives {
 
             uint64_t newOffset = alignedOffset;
             if (dataSize > 0) {
-                tgtDat.write(reinterpret_cast<const char *>(buffer.data()),
+                tgtDat.write(reinterpret_cast<const char*>(buffer.data()),
                              dataSize);
             }
 
@@ -341,9 +340,9 @@ namespace Nomad::Archives {
         return SaveMetadata(targetFatPath, targetArchive, errorMsg);
     }
 
-    bool ArchiveModifier::SaveMetadata(const std::filesystem::path &fatPath,
-                                       const IArchive &archive,
-                                       std::string &errorMsg) {
+    bool ArchiveModifier::SaveMetadata(const std::filesystem::path& fatPath,
+                                       const IArchive& archive,
+                                       std::string& errorMsg) {
         errorMsg.clear();
 
         std::string validateError;

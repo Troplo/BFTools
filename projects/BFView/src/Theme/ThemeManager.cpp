@@ -16,7 +16,7 @@
 namespace BFView {
     namespace {
 
-        QColor ParseColor(const QString &str) {
+        QColor ParseColor(const QString& str) {
             if (str.isEmpty())
                 return QColor();
             const QStringList parts = str.split(',', Qt::SkipEmptyParts);
@@ -28,13 +28,13 @@ namespace BFView {
             return QColor(str.trimmed());
         }
 
-        QPalette LoadPaletteFromColorScheme(const QString &filePath,
+        QPalette LoadPaletteFromColorScheme(const QString& filePath,
                                             bool darkFallback) {
             QPalette pal;
             QSettings s(filePath, QSettings::IniFormat);
 
-            auto readCol = [&](const QString &group, const QString &key,
-                               const QColor &def) -> QColor {
+            auto readCol = [&](const QString& group, const QString& key,
+                               const QColor& def) -> QColor {
                 s.beginGroup(group);
                 const QString val = s.value(key).toString();
                 s.endGroup();
@@ -133,7 +133,7 @@ namespace BFView {
             return pal;
         }
 
-        QString GenerateBreezeStylesheet(bool dark, const QPalette &pal) {
+        QString GenerateBreezeStylesheet(bool dark, const QPalette& pal) {
             const QString winHex = pal.color(QPalette::Window).name();
             const QString winTextHex = pal.color(QPalette::WindowText).name();
             const QString baseHex = pal.color(QPalette::Base).name();
@@ -479,7 +479,7 @@ namespace BFView {
 
     } // namespace
 
-    ThemeManager &ThemeManager::GetInstance() {
+    ThemeManager& ThemeManager::GetInstance() {
         static ThemeManager instance;
         return instance;
     }
@@ -511,7 +511,7 @@ namespace BFView {
         }
     }
 
-    AppTheme ThemeManager::ThemeFromString(const QString &str) {
+    AppTheme ThemeManager::ThemeFromString(const QString& str) {
         if (str.compare("BreezeLight", Qt::CaseInsensitive) == 0 ||
             str.compare("Light", Qt::CaseInsensitive) == 0 ||
             str.compare("Breeze-Light", Qt::CaseInsensitive) == 0) {
@@ -525,7 +525,7 @@ namespace BFView {
         return AppTheme::System;
     }
 
-    void ThemeManager::ApplyTheme(const QString &themeName) {
+    void ThemeManager::ApplyTheme(const QString& themeName) {
         ApplyTheme(ThemeFromString(themeName));
     }
 
@@ -562,7 +562,7 @@ namespace BFView {
         qApp->setStyleSheet(QString());
         qApp->setProperty("KDE_COLOR_SCHEME_PATH", QVariant());
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
-        if (auto *hints = QGuiApplication::styleHints()) {
+        if (auto* hints = QGuiApplication::styleHints()) {
             hints->setColorScheme(Qt::ColorScheme::Unknown);
         }
 #endif
@@ -571,7 +571,7 @@ namespace BFView {
                 qApp->style() ? qApp->style()->objectName() : QString();
             if (currentStyleName.compare(m_originalStyleName,
                                          Qt::CaseInsensitive) != 0) {
-                if (auto *style = QStyleFactory::create(m_originalStyleName)) {
+                if (auto* style = QStyleFactory::create(m_originalStyleName)) {
                     qApp->setStyle(style);
                 }
             }
@@ -591,7 +591,7 @@ namespace BFView {
         const QPalette palette = LoadPaletteFromColorScheme(colorsPath, dark);
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
-        if (auto *hints = QGuiApplication::styleHints()) {
+        if (auto* hints = QGuiApplication::styleHints()) {
             hints->setColorScheme(dark ? Qt::ColorScheme::Dark
                                        : Qt::ColorScheme::Light);
         }
@@ -611,7 +611,7 @@ namespace BFView {
         const QString currentStyleName =
             qApp->style() ? qApp->style()->objectName() : QString();
         if (currentStyleName.compare("fusion", Qt::CaseInsensitive) != 0) {
-            if (auto *fusion = QStyleFactory::create("Fusion")) {
+            if (auto* fusion = QStyleFactory::create("Fusion")) {
                 qApp->setStyle(fusion);
             }
         }

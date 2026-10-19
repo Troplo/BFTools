@@ -17,16 +17,16 @@
 using namespace Nomad::Archives;
 
 namespace BFView::Views {
-    ContentsTreeView::ContentsTreeView(QWidget *parent) : QTreeView(parent) {}
+    ContentsTreeView::ContentsTreeView(QWidget* parent) : QTreeView(parent) {}
 
-    void ContentsTreeView::mousePressEvent(QMouseEvent *event) {
+    void ContentsTreeView::mousePressEvent(QMouseEvent* event) {
         if (event->button() == Qt::LeftButton) {
             m_dragStartPos = event->pos();
         }
         QTreeView::mousePressEvent(event);
     }
 
-    void ContentsTreeView::mouseMoveEvent(QMouseEvent *event) {
+    void ContentsTreeView::mouseMoveEvent(QMouseEvent* event) {
         if ((event->buttons() & Qt::LeftButton) &&
             m_dragStartPos != QPoint(-1, -1)) {
             int distance = (event->pos() - m_dragStartPos).manhattanLength();
@@ -37,7 +37,7 @@ namespace BFView::Views {
                 if (index.isValid()) {
                     QModelIndexList selected = selectionModel()->selectedRows();
                     bool containsIndex = false;
-                    for (const auto &idx : selected) {
+                    for (const auto& idx : selected) {
                         if (idx.row() == index.row() &&
                             idx.parent() == index.parent()) {
                             containsIndex = true;
@@ -56,7 +56,7 @@ namespace BFView::Views {
         QTreeView::mouseMoveEvent(event);
     }
 
-    void ContentsTreeView::mouseReleaseEvent(QMouseEvent *event) {
+    void ContentsTreeView::mouseReleaseEvent(QMouseEvent* event) {
         m_dragStartPos = QPoint(-1, -1);
         QTreeView::mouseReleaseEvent(event);
         if (state() == DragSelectingState) {
@@ -64,7 +64,7 @@ namespace BFView::Views {
         }
     }
 
-    void ContentsTreeView::focusOutEvent(QFocusEvent *event) {
+    void ContentsTreeView::focusOutEvent(QFocusEvent* event) {
         if (state() == DragSelectingState) {
             setState(NoState);
         }
@@ -72,11 +72,11 @@ namespace BFView::Views {
     }
 
     QItemSelectionModel::SelectionFlags
-    ContentsTreeView::selectionCommand(const QModelIndex &index,
-                                       const QEvent *event) const {
+    ContentsTreeView::selectionCommand(const QModelIndex& index,
+                                       const QEvent* event) const {
         if (event && (event->type() == QEvent::KeyPress ||
                       event->type() == QEvent::KeyRelease)) {
-            const auto *ke = static_cast<const QKeyEvent *>(event);
+            const auto* ke = static_cast<const QKeyEvent*>(event);
             if (!(ke->modifiers() &
                   (Qt::ShiftModifier | Qt::ControlModifier))) {
                 return QItemSelectionModel::ClearAndSelect |
@@ -86,7 +86,7 @@ namespace BFView::Views {
         return QTreeView::selectionCommand(index, event);
     }
 
-    void ContentsTreeView::keyPressEvent(QKeyEvent *event) {
+    void ContentsTreeView::keyPressEvent(QKeyEvent* event) {
         if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
             emit RequestNavigateSelected();
             return;
@@ -195,13 +195,13 @@ namespace BFView::Views {
         QTreeView::keyPressEvent(event);
     }
 
-    FileManagerView::FileManagerView(QWidget *parent) : QWidget(parent) {
+    FileManagerView::FileManagerView(QWidget* parent) : QWidget(parent) {
         setAcceptDrops(true);
         SetupUi();
     }
 
     void FileManagerView::SetupUi() {
-        auto *mainLayout = new QVBoxLayout(this);
+        auto* mainLayout = new QVBoxLayout(this);
         mainLayout->setContentsMargins(0, 0, 0, 0);
         mainLayout->setSpacing(6);
 
@@ -229,16 +229,16 @@ namespace BFView::Views {
         m_contentsProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
         m_breadcrumb->SetSubfolderProvider(
-            [this](const QString &path) -> QStringList {
+            [this](const QString& path) -> QStringList {
                 if (!m_treeModel || !m_treeModel->GetRootNode())
                     return {};
-                const ArchiveNode *current = m_treeModel->GetRootNode().get();
+                const ArchiveNode* current = m_treeModel->GetRootNode().get();
                 if (path != "/" && !path.isEmpty()) {
                     const QStringList parts =
                         path.split('/', Qt::SkipEmptyParts);
-                    for (const auto &part : parts) {
+                    for (const auto& part : parts) {
                         bool found = false;
-                        for (const auto &child : current->children) {
+                        for (const auto& child : current->children) {
                             if (child->name.c_str() == part) {
                                 current = child.get();
                                 found = true;
@@ -250,7 +250,7 @@ namespace BFView::Views {
                     }
                 }
                 QStringList subfolders;
-                for (const auto &child : current->children) {
+                for (const auto& child : current->children) {
                     if (child->isDirectory) {
                         subfolders.append(QString::fromStdString(child->name));
                     }
@@ -258,7 +258,7 @@ namespace BFView::Views {
                 return subfolders;
             });
 
-        auto *splitter = new QSplitter(Qt::Horizontal, this);
+        auto* splitter = new QSplitter(Qt::Horizontal, this);
 
         m_treeView = new QTreeView(splitter);
         m_treeView->setModel(m_treeProxyModel);
@@ -311,7 +311,7 @@ namespace BFView::Views {
                     if (!nodes.empty()) {
                         emit RequestDeleteNodes(nodes);
                     } else {
-                        const ArchiveNode *node = GetSelectedNode();
+                        const ArchiveNode* node = GetSelectedNode();
                         if (node && node != m_currentFolderNode) {
                             emit RequestDeleteNode(node);
                         }
@@ -351,7 +351,7 @@ namespace BFView::Views {
         }
     }
 
-    void FileManagerView::SetSearchFilter(const QString &filterText) {
+    void FileManagerView::SetSearchFilter(const QString& filterText) {
         if (m_contentsProxyModel) {
             m_contentsProxyModel->setFilterWildcard(filterText);
         }
@@ -363,7 +363,7 @@ namespace BFView::Views {
         }
     }
 
-    void FileManagerView::SetCurrentFolder(const ArchiveNode *folderNode) {
+    void FileManagerView::SetCurrentFolder(const ArchiveNode* folderNode) {
         if (!folderNode)
             return;
         m_currentFolderNode = folderNode;
@@ -379,19 +379,19 @@ namespace BFView::Views {
         emit FolderChanged(fullPath);
     }
 
-    void FileManagerView::NavigateToPath(const QString &path) {
+    void FileManagerView::NavigateToPath(const QString& path) {
         if (!m_treeModel || !m_treeModel->GetRootNode())
             return;
-        const ArchiveNode *root = m_treeModel->GetRootNode().get();
+        const ArchiveNode* root = m_treeModel->GetRootNode().get();
         if (path == "/" || path.isEmpty()) {
             SetCurrentFolder(root);
             return;
         }
-        const ArchiveNode *current = root;
+        const ArchiveNode* current = root;
         QStringList parts = path.split('/', Qt::SkipEmptyParts);
-        for (const auto &part : parts) {
+        for (const auto& part : parts) {
             bool found = false;
-            for (const auto &child : current->children) {
+            for (const auto& child : current->children) {
                 if (child->name.c_str() == part) {
                     current = child.get();
                     found = true;
@@ -404,7 +404,7 @@ namespace BFView::Views {
         SetCurrentFolder(current);
     }
 
-    const ArchiveNode *FileManagerView::GetSelectedNode() const {
+    const ArchiveNode* FileManagerView::GetSelectedNode() const {
         QModelIndex proxyIdx = m_contentsView->currentIndex();
         if (!proxyIdx.isValid())
             return nullptr;
@@ -412,16 +412,16 @@ namespace BFView::Views {
         return m_contentsModel->NodeFromIndex(srcIdx);
     }
 
-    std::vector<const ArchiveNode *> FileManagerView::GetSelectedNodes() const {
-        std::vector<const ArchiveNode *> nodes;
+    std::vector<const ArchiveNode*> FileManagerView::GetSelectedNodes() const {
+        std::vector<const ArchiveNode*> nodes;
         if (!m_contentsView->selectionModel())
             return nodes;
         auto selectedRows = m_contentsView->selectionModel()->selectedRows();
-        for (const auto &proxyIdx : selectedRows) {
+        for (const auto& proxyIdx : selectedRows) {
             if (proxyIdx.isValid()) {
                 QModelIndex srcIdx =
                     m_contentsProxyModel->mapToSource(proxyIdx);
-                const ArchiveNode *node =
+                const ArchiveNode* node =
                     m_contentsModel->NodeFromIndex(srcIdx);
                 if (node)
                     nodes.push_back(node);
@@ -431,23 +431,23 @@ namespace BFView::Views {
     }
 
     void
-    FileManagerView::OnTreeSelectionChanged(const QModelIndex &current,
-                                            const QModelIndex & /*previous*/) {
+    FileManagerView::OnTreeSelectionChanged(const QModelIndex& current,
+                                            const QModelIndex& /*previous*/) {
         if (m_isSyncingTreeSelection || !current.isValid())
             return;
         QModelIndex srcIdx = m_treeProxyModel->mapToSource(current);
-        const ArchiveNode *node = m_treeModel->NodeFromIndex(srcIdx);
+        const ArchiveNode* node = m_treeModel->NodeFromIndex(srcIdx);
         if (node && node->isDirectory) {
             SetCurrentFolder(node);
             emit FolderChanged(QString::fromStdString(node->fullPath));
         }
     }
 
-    void FileManagerView::OnContentsDoubleClicked(const QModelIndex &index) {
+    void FileManagerView::OnContentsDoubleClicked(const QModelIndex& index) {
         if (!index.isValid())
             return;
         QModelIndex srcIdx = m_contentsProxyModel->mapToSource(index);
-        const ArchiveNode *node = m_contentsModel->NodeFromIndex(srcIdx);
+        const ArchiveNode* node = m_contentsModel->NodeFromIndex(srcIdx);
         if (!node)
             return;
 
@@ -464,13 +464,13 @@ namespace BFView::Views {
         }
     }
 
-    void FileManagerView::OnContentsDragStart(const QModelIndex &index) {
+    void FileManagerView::OnContentsDragStart(const QModelIndex& index) {
         if (!index.isValid())
             return;
         auto selectedNodes = GetSelectedNodes();
         if (selectedNodes.empty()) {
             QModelIndex srcIdx = m_contentsProxyModel->mapToSource(index);
-            const ArchiveNode *node = m_contentsModel->NodeFromIndex(srcIdx);
+            const ArchiveNode* node = m_contentsModel->NodeFromIndex(srcIdx);
             if (node) {
                 emit RequestDragOutNodes({node});
                 emit RequestDragOut(node);
@@ -481,13 +481,13 @@ namespace BFView::Views {
     }
 
     void
-    FileManagerView::OnContentsDragIndexes(const QModelIndexList &indexes) {
-        std::vector<const ArchiveNode *> nodes;
-        for (const auto &proxyIdx : indexes) {
+    FileManagerView::OnContentsDragIndexes(const QModelIndexList& indexes) {
+        std::vector<const ArchiveNode*> nodes;
+        for (const auto& proxyIdx : indexes) {
             if (proxyIdx.isValid()) {
                 QModelIndex srcIdx =
                     m_contentsProxyModel->mapToSource(proxyIdx);
-                const ArchiveNode *node =
+                const ArchiveNode* node =
                     m_contentsModel->NodeFromIndex(srcIdx);
                 if (node)
                     nodes.push_back(node);
@@ -498,13 +498,13 @@ namespace BFView::Views {
         }
     }
 
-    void FileManagerView::OnContextMenuRequested(const QPoint &pos) {
+    void FileManagerView::OnContextMenuRequested(const QPoint& pos) {
         auto selectedNodes = GetSelectedNodes();
 
         QMenu contextMenu(this);
 
         if (selectedNodes.size() > 1) {
-            QAction *extractSelAct =
+            QAction* extractSelAct =
                 contextMenu.addAction(QIcon::fromTheme("archive-extract"),
                                       QString("Extract %1 Selected Items...")
                                           .arg(selectedNodes.size()));
@@ -515,7 +515,7 @@ namespace BFView::Views {
 
             contextMenu.addSeparator();
 
-            QAction *deleteSelAct = contextMenu.addAction(
+            QAction* deleteSelAct = contextMenu.addAction(
                 QIcon::fromTheme("edit-delete"),
                 QString("Delete %1 Selected Items").arg(selectedNodes.size()));
             deleteSelAct->setShortcut(QKeySequence::Delete);
@@ -527,7 +527,7 @@ namespace BFView::Views {
             contextMenu.addSeparator();
         } else if (selectedNodes.size() == 1 ||
                    m_contentsView->indexAt(pos).isValid()) {
-            const ArchiveNode *node =
+            const ArchiveNode* node =
                 !selectedNodes.empty() ? selectedNodes[0] : nullptr;
             if (!node) {
                 QModelIndex proxyIdx = m_contentsView->indexAt(pos);
@@ -540,14 +540,14 @@ namespace BFView::Views {
 
             if (node) {
                 if (node->isDirectory) {
-                    QAction *extractFolderAct = contextMenu.addAction(
+                    QAction* extractFolderAct = contextMenu.addAction(
                         QIcon::fromTheme("archive-extract"),
                         QString("Extract Folder '%1'...")
                             .arg(QString::fromStdString(node->name)));
                     connect(extractFolderAct, &QAction::triggered, this,
                             [this, node]() { emit RequestExtractNode(node); });
                 } else {
-                    QAction *openAct = contextMenu.addAction(
+                    QAction* openAct = contextMenu.addAction(
                         QIcon::fromTheme("document-open"),
                         QString("Open '%1'")
                             .arg(QString::fromStdString(node->name)));
@@ -555,7 +555,7 @@ namespace BFView::Views {
                         emit RequestOpenFile(node, false, false);
                     });
 
-                    QAction *openWithAct =
+                    QAction* openWithAct =
                         contextMenu.addAction(QIcon::fromTheme("document-open"),
                                               "Open with system app");
                     connect(openWithAct, &QAction::triggered, this,
@@ -565,7 +565,7 @@ namespace BFView::Views {
 
                     contextMenu.addSeparator();
 
-                    QAction *extractFileAct = contextMenu.addAction(
+                    QAction* extractFileAct = contextMenu.addAction(
                         QIcon::fromTheme("archive-extract"), "Extract File...");
                     connect(extractFileAct, &QAction::triggered, this,
                             [this, node]() { emit RequestExtractNode(node); });
@@ -573,7 +573,7 @@ namespace BFView::Views {
 
                 contextMenu.addSeparator();
 
-                QAction *deleteAct = contextMenu.addAction(
+                QAction* deleteAct = contextMenu.addAction(
                     QIcon::fromTheme("edit-delete"), "Delete");
                 deleteAct->setShortcut(QKeySequence::Delete);
                 connect(deleteAct, &QAction::triggered, this,
@@ -581,7 +581,7 @@ namespace BFView::Views {
 
                 contextMenu.addSeparator();
 
-                QAction *copyPathAct = contextMenu.addAction(
+                QAction* copyPathAct = contextMenu.addAction(
                     QIcon::fromTheme("edit-copy"), "Copy Path");
                 connect(copyPathAct, &QAction::triggered, this, [node]() {
                     QApplication::clipboard()->setText(
@@ -589,7 +589,7 @@ namespace BFView::Views {
                 });
 
                 if (node->entryRef) {
-                    QAction *copyHashAct = contextMenu.addAction(
+                    QAction* copyHashAct = contextMenu.addAction(
                         QIcon::fromTheme("edit-copy"), "Copy Hash/Path ID");
                     connect(copyHashAct, &QAction::triggered, this, [node]() {
                         QApplication::clipboard()->setText(
@@ -601,24 +601,24 @@ namespace BFView::Views {
             }
         }
 
-        QAction *extractAllAct = contextMenu.addAction(
+        QAction* extractAllAct = contextMenu.addAction(
             QIcon::fromTheme("archive-extract"), "Extract All from Archive...");
         connect(extractAllAct, &QAction::triggered, this,
                 [this]() { emit RequestExtractAll(); });
 
         contextMenu.addSeparator();
 
-        QAction *addFileAct = contextMenu.addAction(
+        QAction* addFileAct = contextMenu.addAction(
             QIcon::fromTheme("document-new"), "Add File to Archive...");
         connect(addFileAct, &QAction::triggered, this,
                 [this]() { emit RequestAddFile(); });
 
-        QAction *addFolderAct = contextMenu.addAction(
+        QAction* addFolderAct = contextMenu.addAction(
             QIcon::fromTheme("folder-new"), "Add Folder to Archive...");
         connect(addFolderAct, &QAction::triggered, this,
                 [this]() { emit RequestAddFolder(); });
 
-        QAction *newFolderAct = contextMenu.addAction(
+        QAction* newFolderAct = contextMenu.addAction(
             QIcon::fromTheme("folder-new"), "New Folder...");
         connect(newFolderAct, &QAction::triggered, this,
                 [this]() { emit RequestNewFolder(); });
@@ -626,9 +626,9 @@ namespace BFView::Views {
         contextMenu.exec(m_contentsView->viewport()->mapToGlobal(pos));
     }
 
-    void FileManagerView::OnTreeContextMenuRequested(const QPoint &pos) {
+    void FileManagerView::OnTreeContextMenuRequested(const QPoint& pos) {
         QModelIndex proxyIdx = m_treeView->indexAt(pos);
-        const ArchiveNode *node = nullptr;
+        const ArchiveNode* node = nullptr;
         if (proxyIdx.isValid()) {
             QModelIndex srcIdx = m_treeProxyModel->mapToSource(proxyIdx);
             node = m_treeModel->NodeFromIndex(srcIdx);
@@ -637,7 +637,7 @@ namespace BFView::Views {
         QMenu contextMenu(this);
 
         if (node) {
-            QAction *extractFolderAct = contextMenu.addAction(
+            QAction* extractFolderAct = contextMenu.addAction(
                 QIcon::fromTheme("archive-extract"),
                 QString("Extract Folder '%1'...")
                     .arg(QString::fromStdString(node->name)));
@@ -647,7 +647,7 @@ namespace BFView::Views {
             contextMenu.addSeparator();
 
             if (node != m_treeModel->GetRootNode().get()) {
-                QAction *deleteAct = contextMenu.addAction(
+                QAction* deleteAct = contextMenu.addAction(
                     QIcon::fromTheme("edit-delete"),
                     QString("Delete Folder '%1'")
                         .arg(QString::fromStdString(node->name)));
@@ -656,7 +656,7 @@ namespace BFView::Views {
                 contextMenu.addSeparator();
             }
 
-            QAction *copyPathAct = contextMenu.addAction(
+            QAction* copyPathAct = contextMenu.addAction(
                 QIcon::fromTheme("edit-copy"), "Copy Relative Path");
             connect(copyPathAct, &QAction::triggered, this, [node]() {
                 QApplication::clipboard()->setText(
@@ -665,17 +665,17 @@ namespace BFView::Views {
             contextMenu.addSeparator();
         }
 
-        QAction *addFileAct = contextMenu.addAction(
+        QAction* addFileAct = contextMenu.addAction(
             QIcon::fromTheme("document-new"), "Add File to Archive...");
         connect(addFileAct, &QAction::triggered, this,
                 [this]() { emit RequestAddFile(); });
 
-        QAction *addFolderAct = contextMenu.addAction(
+        QAction* addFolderAct = contextMenu.addAction(
             QIcon::fromTheme("folder-new"), "Add Folder to Archive...");
         connect(addFolderAct, &QAction::triggered, this,
                 [this]() { emit RequestAddFolder(); });
 
-        QAction *newFolderAct = contextMenu.addAction(
+        QAction* newFolderAct = contextMenu.addAction(
             QIcon::fromTheme("folder-new"), "New Folder...");
         connect(newFolderAct, &QAction::triggered, this,
                 [this]() { emit RequestNewFolder(); });
@@ -683,7 +683,7 @@ namespace BFView::Views {
         contextMenu.exec(m_treeView->viewport()->mapToGlobal(pos));
     }
 
-    void FileManagerView::dragEnterEvent(QDragEnterEvent *event) {
+    void FileManagerView::dragEnterEvent(QDragEnterEvent* event) {
         if (event->mimeData()->hasUrls()) {
             event->acceptProposedAction();
             m_dropOverlayLabel->setGeometry(rect().adjusted(10, 10, -10, -10));
@@ -692,18 +692,18 @@ namespace BFView::Views {
         }
     }
 
-    void FileManagerView::dragMoveEvent(QDragMoveEvent *event) {
+    void FileManagerView::dragMoveEvent(QDragMoveEvent* event) {
         if (event->mimeData()->hasUrls()) {
             event->acceptProposedAction();
         }
     }
 
-    void FileManagerView::dragLeaveEvent(QDragLeaveEvent *event) {
+    void FileManagerView::dragLeaveEvent(QDragLeaveEvent* event) {
         m_dropOverlayLabel->hide();
         event->accept();
     }
 
-    void FileManagerView::dropEvent(QDropEvent *event) {
+    void FileManagerView::dropEvent(QDropEvent* event) {
         m_dropOverlayLabel->hide();
         if (!event->mimeData()->hasUrls())
             return;
@@ -711,7 +711,7 @@ namespace BFView::Views {
         QStringList files;
         QString droppedArchive;
 
-        for (const QUrl &url : event->mimeData()->urls()) {
+        for (const QUrl& url : event->mimeData()->urls()) {
             if (url.isLocalFile()) {
                 QString path = url.toLocalFile();
                 if (path.endsWith(".fat", Qt::CaseInsensitive)) {
@@ -737,7 +737,7 @@ namespace BFView::Views {
             QModelIndex cIdx = m_contentsView->indexAt(contentsP);
             if (cIdx.isValid()) {
                 QModelIndex srcIdx = m_contentsProxyModel->mapToSource(cIdx);
-                const ArchiveNode *targetNode =
+                const ArchiveNode* targetNode =
                     m_contentsModel->NodeFromIndex(srcIdx);
                 if (targetNode && targetNode->isDirectory) {
                     currentTargetRelPath =
@@ -748,7 +748,7 @@ namespace BFView::Views {
                 QModelIndex tIdx = m_treeView->indexAt(treeP);
                 if (tIdx.isValid()) {
                     QModelIndex srcIdx = m_treeProxyModel->mapToSource(tIdx);
-                    const ArchiveNode *targetNode =
+                    const ArchiveNode* targetNode =
                         m_treeModel->NodeFromIndex(srcIdx);
                     if (targetNode && targetNode->isDirectory) {
                         currentTargetRelPath =

@@ -18,8 +18,8 @@ unsigned lzx_get_window_order(size_t max_bufsize);
 
 unsigned lzx_get_num_main_syms(unsigned window_order);
 
-void lzx_preprocess(u8 *data, u32 size);
+void lzx_preprocess(u8* data, u32 size);
 
-void lzx_postprocess(u8 *data, u32 size);
+void lzx_postprocess(u8* data, u32 size);
 
 #endif /* _LZX_COMMON_H */

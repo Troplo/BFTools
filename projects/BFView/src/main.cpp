@@ -11,7 +11,7 @@
 #include <cstdio>
 #include <tracy/Tracy.hpp>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     ZoneScopedN("BFView::Main");
     Nexus::MemoryManager::SetReady(true);
     // Quick CLI help check
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     app.setWindowIcon(QIcon(":/icons/icon.png"));
 
     // Initialize Settings and apply saved Theme
-    auto &settings = BFView::SettingsManager::GetInstance();
+    auto& settings = BFView::SettingsManager::GetInstance();
     BFView::ThemeManager::GetInstance().ApplyTheme(settings.GetAppTheme());
 
     BFView::MainWindow window;

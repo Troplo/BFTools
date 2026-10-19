@@ -12,12 +12,12 @@ namespace BFView::Models {
         Q_OBJECT
 
       public:
-        explicit ArchiveSortFilterProxyModel(QObject *parent = nullptr);
+        explicit ArchiveSortFilterProxyModel(QObject* parent = nullptr);
         ~ArchiveSortFilterProxyModel() override = default;
 
       protected:
-        bool lessThan(const QModelIndex &left,
-                      const QModelIndex &right) const override;
+        bool lessThan(const QModelIndex& left,
+                      const QModelIndex& right) const override;
     };
 
 } // namespace BFView::Models

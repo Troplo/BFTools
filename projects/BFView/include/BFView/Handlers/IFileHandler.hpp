@@ -14,11 +14,11 @@ namespace BFView {
         virtual ~IFileHandler() = default;
 
         virtual QString GetName() const = 0;
-        virtual bool CanHandle(const QString &fileName,
-                               const QByteArray &fileData) const = 0;
-        virtual bool OpenFile(const QString &fileName,
-                              const QByteArray &fileData,
-                              const QString &tempDir) = 0;
+        virtual bool CanHandle(const QString& fileName,
+                               const QByteArray& fileData) const = 0;
+        virtual bool OpenFile(const QString& fileName,
+                              const QByteArray& fileData,
+                              const QString& tempDir) = 0;
     };
 
 } // namespace BFView

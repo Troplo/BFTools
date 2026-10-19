@@ -23,7 +23,7 @@ namespace Nomad::Archives {
 
         template <typename... Args>
         static void Log(LogLevel level, std::string_view tag,
-                        std::format_string<Args...> fmt, Args &&...args) {
+                        std::format_string<Args...> fmt, Args&&... args) {
             if (level < s_minLevel)
                 return;
 
@@ -39,9 +39,9 @@ namespace Nomad::Archives {
             localtime_r(&timeT, &tm);
 #endif
 
-            const char *levelStr = "INFO ";
-            const char *colorCode = "";
-            const char *resetCode = "\033[0m";
+            const char* levelStr = "INFO ";
+            const char* colorCode = "";
+            const char* resetCode = "\033[0m";
 
             switch (level) {
             case LogLevel::Debug:
@@ -66,7 +66,7 @@ namespace Nomad::Archives {
                 std::format(fmt, std::forward<Args>(args)...);
 
             std::lock_guard<std::mutex> lock(s_mutex);
-            std::ostream &out =
+            std::ostream& out =
                 (level == LogLevel::Error) ? std::cerr : std::cout;
             out << std::format("[{:02d}:{:02d}:{:02d}.{:03d}] {}{}{} [{}] {}\n",
                                tm.tm_hour, tm.tm_min, tm.tm_sec,
@@ -77,25 +77,25 @@ namespace Nomad::Archives {
 
         template <typename... Args>
         static void Debug(std::string_view tag, std::format_string<Args...> fmt,
-                          Args &&...args) {
+                          Args&&... args) {
             Log(LogLevel::Debug, tag, fmt, std::forward<Args>(args)...);
         }
 
         template <typename... Args>
         static void Info(std::string_view tag, std::format_string<Args...> fmt,
-                         Args &&...args) {
+                         Args&&... args) {
             Log(LogLevel::Info, tag, fmt, std::forward<Args>(args)...);
         }
 
         template <typename... Args>
         static void Warn(std::string_view tag, std::format_string<Args...> fmt,
-                         Args &&...args) {
+                         Args&&... args) {
             Log(LogLevel::Warn, tag, fmt, std::forward<Args>(args)...);
         }
 
         template <typename... Args>
         static void Error(std::string_view tag, std::format_string<Args...> fmt,
-                          Args &&...args) {
+                          Args&&... args) {
             Log(LogLevel::Error, tag, fmt, std::forward<Args>(args)...);
         }
 

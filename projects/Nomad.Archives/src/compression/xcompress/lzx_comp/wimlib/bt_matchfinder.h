@@ -123,12 +123,12 @@ TEMPLATED(bt_matchfinder_init)(struct TEMPLATED(bt_matchfinder) * mf) {
     memset(mf, 0, sizeof(*mf));
 }
 
-static forceinline mf_pos_t *
+static forceinline mf_pos_t*
 TEMPLATED(bt_left_child)(struct TEMPLATED(bt_matchfinder) * mf, u32 node) {
     return &mf->child_tab[(node << 1) + 0];
 }
 
-static forceinline mf_pos_t *
+static forceinline mf_pos_t*
 TEMPLATED(bt_right_child)(struct TEMPLATED(bt_matchfinder) * mf, u32 node) {
     return &mf->child_tab[(node << 1) + 1];
 }
@@ -140,12 +140,12 @@ TEMPLATED(bt_right_child)(struct TEMPLATED(bt_matchfinder) * mf, u32 node) {
 
 /* Advance the binary tree matchfinder by one byte, optionally recording
  * matches.  @record_matches should be a compile-time constant.  */
-static forceinline struct lz_match *TEMPLATED(bt_matchfinder_advance_one_byte)(
-    struct TEMPLATED(bt_matchfinder) *const mf, const u8 *const in_begin,
+static forceinline struct lz_match* TEMPLATED(bt_matchfinder_advance_one_byte)(
+    struct TEMPLATED(bt_matchfinder) * const mf, const u8* const in_begin,
     const ptrdiff_t cur_pos, const u32 max_len, const u32 nice_len,
-    const u32 max_search_depth, u32 *const next_hashes, u32 *const best_len_ret,
-    struct lz_match *lz_matchptr, const bool record_matches) {
-    const u8 *in_next = in_begin + cur_pos;
+    const u32 max_search_depth, u32* const next_hashes, u32* const best_len_ret,
+    struct lz_match* lz_matchptr, const bool record_matches) {
+    const u8* in_next = in_begin + cur_pos;
     u32 depth_remaining = max_search_depth;
     u32 next_hashseq;
     u32 hash3;
@@ -160,7 +160,7 @@ static forceinline struct lz_match *TEMPLATED(bt_matchfinder_advance_one_byte)(
 #if BT_MATCHFINDER_HASH3_WAYS >= 2
     u32 cur_node_2;
 #endif
-    const u8 *matchptr;
+    const u8* matchptr;
     mf_pos_t *pending_lt_ptr, *pending_gt_ptr;
     u32 best_lt_len, best_gt_len;
     u32 len;
@@ -312,10 +312,10 @@ static forceinline struct lz_match *TEMPLATED(bt_matchfinder_advance_one_byte)(
  * The return value is a pointer to the next available slot in the @lz_matchptr
  * array.  (If no matches were found, this will be the same as @lz_matchptr.)
  */
-static forceinline struct lz_match *TEMPLATED(bt_matchfinder_get_matches)(
-    struct TEMPLATED(bt_matchfinder) * mf, const u8 *in_begin,
+static forceinline struct lz_match* TEMPLATED(bt_matchfinder_get_matches)(
+    struct TEMPLATED(bt_matchfinder) * mf, const u8* in_begin,
     ptrdiff_t cur_pos, u32 max_len, u32 nice_len, u32 max_search_depth,
-    u32 next_hashes[2], u32 *best_len_ret, struct lz_match *lz_matchptr) {
+    u32 next_hashes[2], u32* best_len_ret, struct lz_match* lz_matchptr) {
     return TEMPLATED(bt_matchfinder_advance_one_byte)(
         mf, in_begin, cur_pos, max_len, nice_len, max_search_depth, next_hashes,
         best_len_ret, lz_matchptr, true);
@@ -328,7 +328,7 @@ static forceinline struct lz_match *TEMPLATED(bt_matchfinder_get_matches)(
  * must do hashing and tree re-rooting.
  */
 static forceinline void TEMPLATED(bt_matchfinder_skip_byte)(
-    struct TEMPLATED(bt_matchfinder) * mf, const u8 *in_begin,
+    struct TEMPLATED(bt_matchfinder) * mf, const u8* in_begin,
     ptrdiff_t cur_pos, u32 nice_len, u32 max_search_depth, u32 next_hashes[2]) {
     u32 best_len;
     TEMPLATED(bt_matchfinder_advance_one_byte)(

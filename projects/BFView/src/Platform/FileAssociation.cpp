@@ -18,8 +18,8 @@
 
 namespace {
 
-    bool SetRegSz(HKEY rootKey, const std::wstring &subKey,
-                  const std::wstring &valueName, const std::wstring &data) {
+    bool SetRegSz(HKEY rootKey, const std::wstring& subKey,
+                  const std::wstring& valueName, const std::wstring& data) {
         HKEY hKey = nullptr;
         LONG res = RegCreateKeyExW(rootKey, subKey.c_str(), 0, nullptr,
                                    REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr,
@@ -29,14 +29,14 @@ namespace {
 
         res = RegSetValueExW(
             hKey, valueName.empty() ? nullptr : valueName.c_str(), 0, REG_SZ,
-            reinterpret_cast<const BYTE *>(data.c_str()),
+            reinterpret_cast<const BYTE*>(data.c_str()),
             static_cast<DWORD>((data.size() + 1) * sizeof(wchar_t)));
         RegCloseKey(hKey);
         return res == ERROR_SUCCESS;
     }
 
-    std::wstring GetRegSz(HKEY rootKey, const std::wstring &subKey,
-                          const std::wstring &valueName) {
+    std::wstring GetRegSz(HKEY rootKey, const std::wstring& subKey,
+                          const std::wstring& valueName) {
         HKEY hKey = nullptr;
         LONG res = RegOpenKeyExW(rootKey, subKey.c_str(), 0, KEY_READ, &hKey);
         if (res != ERROR_SUCCESS)
@@ -47,7 +47,7 @@ namespace {
         DWORD type = REG_SZ;
         res = RegQueryValueExW(
             hKey, valueName.empty() ? nullptr : valueName.c_str(), nullptr,
-            &type, reinterpret_cast<BYTE *>(buf), &bufSize);
+            &type, reinterpret_cast<BYTE*>(buf), &bufSize);
         RegCloseKey(hKey);
         if (res == ERROR_SUCCESS && type == REG_SZ) {
             return std::wstring(buf);

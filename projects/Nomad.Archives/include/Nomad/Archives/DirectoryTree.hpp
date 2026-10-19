@@ -15,8 +15,8 @@ namespace Nomad::Archives {
         std::string name;
         std::string fullPath;
         bool isDirectory{false};
-        const ArchiveEntry *entryRef{nullptr};
-        ArchiveNode *parent{nullptr};
+        const ArchiveEntry* entryRef{nullptr};
+        ArchiveNode* parent{nullptr};
         size_t rowIndex{0};
         std::vector<std::shared_ptr<ArchiveNode>> children;
 
@@ -26,7 +26,7 @@ namespace Nomad::Archives {
     class DirectoryTreeBuilder {
       public:
         static std::shared_ptr<ArchiveNode>
-        Build(const std::vector<ArchiveEntry> &entries);
+        Build(const std::vector<ArchiveEntry>& entries);
     };
 
 } // namespace Nomad::Archives

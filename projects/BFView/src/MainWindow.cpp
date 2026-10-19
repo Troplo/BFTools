@@ -43,7 +43,7 @@
 using namespace Nomad::Archives;
 
 namespace BFView {
-    MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+    MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
         setupUi();
         updateWindowTitle();
 
@@ -78,19 +78,19 @@ namespace BFView {
 
     void MainWindow::setupUi() {
         // Menu Bar
-        QMenu *fileMenu = menuBar()->addMenu("&File");
+        QMenu* fileMenu = menuBar()->addMenu("&File");
 
-        QAction *newAct = fileMenu->addAction(QIcon::fromTheme("document-new"),
+        QAction* newAct = fileMenu->addAction(QIcon::fromTheme("document-new"),
                                               "&New Archive...");
         newAct->setShortcut(QKeySequence::New);
         connect(newAct, &QAction::triggered, this, &MainWindow::onNewAction);
 
-        QAction *openAct = fileMenu->addAction(
+        QAction* openAct = fileMenu->addAction(
             QIcon::fromTheme("document-open"), "&Open Archive...");
         openAct->setShortcut(QKeySequence::Open);
         connect(openAct, &QAction::triggered, this, &MainWindow::onOpenAction);
 
-        QAction *closeAct = fileMenu->addAction(
+        QAction* closeAct = fileMenu->addAction(
             QIcon::fromTheme("window-close"), "&Close Archive");
         closeAct->setShortcut(QKeySequence::Close);
         connect(closeAct, &QAction::triggered, this,
@@ -98,28 +98,28 @@ namespace BFView {
 
         fileMenu->addSeparator();
 
-        QAction *changeProjectAct = fileMenu->addAction(
+        QAction* changeProjectAct = fileMenu->addAction(
             QIcon::fromTheme("project-development"), "Change &Project...");
         connect(changeProjectAct, &QAction::triggered, this,
                 &MainWindow::onChangeProjectAction);
 
         fileMenu->addSeparator();
 
-        QAction *exitAct =
+        QAction* exitAct =
             fileMenu->addAction(QIcon::fromTheme("application-exit"), "E&xit");
         exitAct->setShortcut(QKeySequence::Quit);
         connect(exitAct, &QAction::triggered, this, &QWidget::close);
 
-        QMenu *actionsMenu = menuBar()->addMenu("&Actions");
+        QMenu* actionsMenu = menuBar()->addMenu("&Actions");
 
-        QAction *extractAllAct = actionsMenu->addAction(
+        QAction* extractAllAct = actionsMenu->addAction(
             QIcon::fromTheme("archive-extract"), "Extract &All...");
         extractAllAct->setShortcut(
             QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_E));
         connect(extractAllAct, &QAction::triggered, this,
                 &MainWindow::onExtractAllAction);
 
-        QAction *extractSelAct = actionsMenu->addAction(
+        QAction* extractSelAct = actionsMenu->addAction(
             QIcon::fromTheme("archive-extract"), "Extract &Selected...");
         extractSelAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_E));
         connect(extractSelAct, &QAction::triggered, this,
@@ -127,27 +127,27 @@ namespace BFView {
 
         actionsMenu->addSeparator();
 
-        QAction *addFileAct = actionsMenu->addAction(
+        QAction* addFileAct = actionsMenu->addAction(
             QIcon::fromTheme("document-new"), "&Add File...");
         addFileAct->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_A));
         connect(addFileAct, &QAction::triggered, this,
                 &MainWindow::onAddFileAction);
 
-        QAction *addFolderAct = actionsMenu->addAction(
+        QAction* addFolderAct = actionsMenu->addAction(
             QIcon::fromTheme("folder-new"), "Add &Folder...");
         addFolderAct->setShortcut(
             QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_F));
         connect(addFolderAct, &QAction::triggered, this,
                 &MainWindow::onAddFolderAction);
 
-        QAction *newFolderAct = actionsMenu->addAction(
+        QAction* newFolderAct = actionsMenu->addAction(
             QIcon::fromTheme("folder-new"), "&New Folder...");
         newFolderAct->setShortcut(
             QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_N));
         connect(newFolderAct, &QAction::triggered, this,
                 &MainWindow::onNewFolderAction);
 
-        QAction *deleteAct = actionsMenu->addAction(
+        QAction* deleteAct = actionsMenu->addAction(
             QIcon::fromTheme("edit-delete"), "&Delete Selected");
         deleteAct->setShortcut(QKeySequence::Delete);
         connect(deleteAct, &QAction::triggered, this,
@@ -155,24 +155,24 @@ namespace BFView {
 
         actionsMenu->addSeparator();
 
-        QAction *syncNfoAct = actionsMenu->addAction(
+        QAction* syncNfoAct = actionsMenu->addAction(
             QIcon::fromTheme("document-save"), "&Sync / Generate NFO");
         syncNfoAct->setShortcut(QKeySequence::Save);
         connect(syncNfoAct, &QAction::triggered, this,
                 &MainWindow::onSyncGenerateNfoAction);
 
-        QAction *defragAct = actionsMenu->addAction(
+        QAction* defragAct = actionsMenu->addAction(
             QIcon::fromTheme("drive-harddisk"), "&Defragment Archive...");
         defragAct->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_D));
         connect(defragAct, &QAction::triggered, this,
                 &MainWindow::onDefragmentAction);
 
         // View Menu
-        QMenu *viewMenu = menuBar()->addMenu("&View");
-        QMenu *themeMenu =
+        QMenu* viewMenu = menuBar()->addMenu("&View");
+        QMenu* themeMenu =
             viewMenu->addMenu(QIcon::fromTheme("preferences-system"), "&Theme");
 
-        auto *themeGroup = new QActionGroup(this);
+        auto* themeGroup = new QActionGroup(this);
         themeGroup->setExclusive(true);
 
         m_actThemeSystem = themeMenu->addAction("&System Default");
@@ -204,22 +204,22 @@ namespace BFView {
             SettingsManager::GetInstance().Save();
         });
 
-        QMenu *settingsMenu = menuBar()->addMenu("&Settings");
-        QAction *configAct = settingsMenu->addAction(
+        QMenu* settingsMenu = menuBar()->addMenu("&Settings");
+        QAction* configAct = settingsMenu->addAction(
             QIcon::fromTheme("preferences-system"), "&Configure Settings...");
         configAct->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
         connect(configAct, &QAction::triggered, this,
                 &MainWindow::onConfigureSettingsAction);
 
-        QMenu *helpMenu = menuBar()->addMenu("&Help");
-        QAction *infoAct = helpMenu->addAction(QIcon::fromTheme("help-about"),
+        QMenu* helpMenu = menuBar()->addMenu("&Help");
+        QAction* infoAct = helpMenu->addAction(QIcon::fromTheme("help-about"),
                                                "Archive &Info...");
         infoAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_I));
         connect(infoAct, &QAction::triggered, this,
                 &MainWindow::onShowArchiveInfoAction);
 
         helpMenu->addSeparator();
-        QAction *aboutAct =
+        QAction* aboutAct =
             helpMenu->addAction(QIcon::fromTheme("help-about"), "&About");
         connect(aboutAct, &QAction::triggered, this, [this]() {
             QMessageBox::about(
@@ -241,7 +241,7 @@ namespace BFView {
         });
 
         // Global Shortcuts
-        auto *focusLocationShortcut =
+        auto* focusLocationShortcut =
             new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_L), this);
         connect(focusLocationShortcut, &QShortcut::activated, this, [this]() {
             if (m_fileManagerView) {
@@ -287,42 +287,42 @@ namespace BFView {
 
         m_toolBar->addSeparator();
 
-        QAction *tbOpen = m_toolBar->addAction(
+        QAction* tbOpen = m_toolBar->addAction(
             QIcon::fromTheme("document-open"), "Open Archive");
         connect(tbOpen, &QAction::triggered, this, &MainWindow::onOpenAction);
 
         m_toolBar->addSeparator();
 
-        QAction *tbExtractAll = m_toolBar->addAction(
+        QAction* tbExtractAll = m_toolBar->addAction(
             QIcon::fromTheme("archive-extract"), "Extract All");
         connect(tbExtractAll, &QAction::triggered, this,
                 &MainWindow::onExtractAllAction);
 
-        QAction *tbExtractSel = m_toolBar->addAction(
+        QAction* tbExtractSel = m_toolBar->addAction(
             QIcon::fromTheme("archive-extract"), "Extract Selected");
         connect(tbExtractSel, &QAction::triggered, this,
                 &MainWindow::onExtractSelectedAction);
 
         m_toolBar->addSeparator();
 
-        QAction *tbAddFile =
+        QAction* tbAddFile =
             m_toolBar->addAction(QIcon::fromTheme("document-new"), "Add File");
         connect(tbAddFile, &QAction::triggered, this,
                 &MainWindow::onAddFileAction);
 
-        QAction *tbAddFolder =
+        QAction* tbAddFolder =
             m_toolBar->addAction(QIcon::fromTheme("folder-new"), "Add Folder");
         connect(tbAddFolder, &QAction::triggered, this,
                 &MainWindow::onAddFolderAction);
 
-        QAction *tbDelete =
+        QAction* tbDelete =
             m_toolBar->addAction(QIcon::fromTheme("edit-delete"), "Delete");
         connect(tbDelete, &QAction::triggered, this,
                 &MainWindow::onDeleteSelectedAction);
 
         m_toolBar->addSeparator();
 
-        QAction *tbDefrag =
+        QAction* tbDefrag =
             m_toolBar->addAction(QIcon::fromTheme("drive-harddisk"), "Defrag");
         tbDefrag->setToolTip("Defragment Archive (Reclaim Slack Space)");
         connect(tbDefrag, &QAction::triggered, this,
@@ -330,15 +330,15 @@ namespace BFView {
 
         m_toolBar->addSeparator();
 
-        QAction *tbInfo = m_toolBar->addAction(QIcon::fromTheme("help-about"),
+        QAction* tbInfo = m_toolBar->addAction(QIcon::fromTheme("help-about"),
                                                "Archive Info");
         connect(tbInfo, &QAction::triggered, this,
                 &MainWindow::onShowArchiveInfoAction);
 
         m_toolBar->addSeparator();
 
-        auto *searchWidget = new QWidget(this);
-        auto *searchLayout = new QHBoxLayout(searchWidget);
+        auto* searchWidget = new QWidget(this);
+        auto* searchLayout = new QHBoxLayout(searchWidget);
         searchLayout->setContentsMargins(5, 0, 5, 0);
 
         m_searchEdit = new QLineEdit(searchWidget);
@@ -350,8 +350,8 @@ namespace BFView {
         m_toolBar->addWidget(searchWidget);
 
         // Central Widget Layout - 100% Viewport File Manager View
-        auto *centralWidget = new QWidget(this);
-        auto *mainLayout = new QVBoxLayout(centralWidget);
+        auto* centralWidget = new QWidget(this);
+        auto* mainLayout = new QVBoxLayout(centralWidget);
         mainLayout->setContentsMargins(6, 6, 6, 6);
         mainLayout->setSpacing(0);
 
@@ -391,7 +391,7 @@ namespace BFView {
         statusBar()->showMessage("Ready. Open a .fat archive to begin.");
     }
 
-    void MainWindow::onFilterTextChanged(const QString &text) {
+    void MainWindow::onFilterTextChanged(const QString& text) {
         if (m_fileManagerView) {
             m_fileManagerView->SetSearchFilter(text);
         }
@@ -482,8 +482,8 @@ namespace BFView {
         OpenArchiveFile(path);
     }
 
-    void MainWindow::OpenArchiveFile(const QString &path,
-                                     const QString &explicitProject) {
+    void MainWindow::OpenArchiveFile(const QString& path,
+                                     const QString& explicitProject) {
         std::filesystem::path fatP = path.toStdString();
         if (fatP.extension() != ".fat") {
             fatP.replace_extension(".fat");
@@ -496,7 +496,7 @@ namespace BFView {
         if (projectToUse == SettingsManager::NONE_PROJECT) {
             projectToUse = "";
         } else if (projectToUse.isEmpty()) {
-            auto &settings = SettingsManager::GetInstance();
+            auto& settings = SettingsManager::GetInstance();
             QString defaultProj =
                 settings.GetDefaultProject(version, rawVersion);
             if (!defaultProj.isEmpty() &&
@@ -574,7 +574,7 @@ namespace BFView {
 
         QString newProj = dialog.GetSelectedProject();
         if (dialog.IsAlwaysUseChecked()) {
-            auto &settings = SettingsManager::GetInstance();
+            auto& settings = SettingsManager::GetInstance();
             settings.SetDefaultProject(
                 m_currentArchive->GetVersion(),
                 m_currentArchive->GetRawVersion(),
@@ -595,7 +595,7 @@ namespace BFView {
         if (projConfig) {
             bool is32 =
                 (m_currentArchive->GetVersion() != ArchiveVersion::FATv5);
-            for (auto &entry : m_currentArchive->GetEntries()) {
+            for (auto& entry : m_currentArchive->GetEntries()) {
                 auto overridePath =
                     projConfig->FindPathByHash(entry.name_hash, is32);
                 if (overridePath.has_value()) {
@@ -604,7 +604,7 @@ namespace BFView {
             }
         }
 
-        for (auto &entry : m_currentArchive->GetEntries()) {
+        for (auto& entry : m_currentArchive->GetEntries()) {
             entry.path = NormalizePath(entry.path);
         }
 
@@ -667,7 +667,7 @@ namespace BFView {
     void MainWindow::onUpAction() {
         if (!m_fileManagerView || !m_currentArchive)
             return;
-        const ArchiveNode *current = m_fileManagerView->GetCurrentFolderNode();
+        const ArchiveNode* current = m_fileManagerView->GetCurrentFolderNode();
         if (current && current->parent) {
             m_fileManagerView->SetCurrentFolder(current->parent);
             m_fileManagerView->SetSearchFilter("");
@@ -679,7 +679,7 @@ namespace BFView {
         updateNavigationButtons();
     }
 
-    void MainWindow::onFolderChanged(const QString &fullPath) {
+    void MainWindow::onFolderChanged(const QString& fullPath) {
         if (!m_isNavigatingHistory) {
             m_navHistory.NavigateTo(fullPath);
         }
@@ -692,7 +692,7 @@ namespace BFView {
         if (m_actForward)
             m_actForward->setEnabled(m_navHistory.CanGoForward());
         if (m_actUp) {
-            const ArchiveNode *current =
+            const ArchiveNode* current =
                 m_fileManagerView ? m_fileManagerView->GetCurrentFolderNode()
                                   : nullptr;
             bool canUp = (current && current->parent) || m_navHistory.CanGoUp();
@@ -709,7 +709,7 @@ namespace BFView {
 
         uint64_t totalUncomp = 0;
         uint64_t totalComp = 0;
-        for (const auto &entry : m_currentArchive->GetEntries()) {
+        for (const auto& entry : m_currentArchive->GetEntries()) {
             totalUncomp += entry.uncompressed_size;
             totalComp += entry.compressed_size;
         }
@@ -793,8 +793,8 @@ namespace BFView {
         if (destDir.isEmpty())
             return;
 
-        std::vector<const ArchiveEntry *> entries;
-        for (const auto &entry : m_currentArchive->GetEntries()) {
+        std::vector<const ArchiveEntry*> entries;
+        for (const auto& entry : m_currentArchive->GetEntries()) {
             entries.push_back(&entry);
         }
 
@@ -809,7 +809,7 @@ namespace BFView {
         if (!selectedNodes.empty()) {
             onRequestExtractNodes(selectedNodes);
         } else {
-            const ArchiveNode *selected = m_fileManagerView->GetSelectedNode();
+            const ArchiveNode* selected = m_fileManagerView->GetSelectedNode();
             if (selected) {
                 onRequestExtractNode(selected);
             } else {
@@ -820,14 +820,14 @@ namespace BFView {
         }
     }
 
-    void MainWindow::onRequestExtractNode(const ArchiveNode *node) {
+    void MainWindow::onRequestExtractNode(const ArchiveNode* node) {
         if (!node)
             return;
         onRequestExtractNodes({node});
     }
 
     void MainWindow::onRequestExtractNodes(
-        const std::vector<const ArchiveNode *> &nodes) {
+        const std::vector<const ArchiveNode*>& nodes) {
         if (nodes.empty() || !m_currentArchive || m_currentFatPath.isEmpty())
             return;
 
@@ -849,10 +849,10 @@ namespace BFView {
             return;
         }
 
-        std::vector<std::pair<const ArchiveEntry *, std::filesystem::path>>
+        std::vector<std::pair<const ArchiveEntry*, std::filesystem::path>>
             tasks;
 
-        for (const auto *node : nodes) {
+        for (const auto* node : nodes) {
             if (!node)
                 continue;
             if (node->isDirectory) {
@@ -862,8 +862,8 @@ namespace BFView {
                 std::filesystem::path folderOutDir = destDirPath / folderName;
                 std::string nodePrefix = NormalizePath(node->fullPath);
 
-                std::function<void(const ArchiveNode *)> collectDir =
-                    [&](const ArchiveNode *n) {
+                std::function<void(const ArchiveNode*)> collectDir =
+                    [&](const ArchiveNode* n) {
                         if (!n)
                             return;
                         if (n->entryRef) {
@@ -878,7 +878,7 @@ namespace BFView {
                             tasks.push_back(
                                 {n->entryRef, folderOutDir / relPath});
                         }
-                        for (const auto &child : n->children) {
+                        for (const auto& child : n->children) {
                             collectDir(child.get());
                         }
                     };
@@ -891,7 +891,7 @@ namespace BFView {
         if (tasks.empty())
             return;
 
-        auto *progressDialog = new Dialogs::ExtractProgressDialog(this);
+        auto* progressDialog = new Dialogs::ExtractProgressDialog(this);
         progressDialog->setWindowModality(Qt::WindowModal);
         progressDialog->show();
 
@@ -909,7 +909,7 @@ namespace BFView {
             std::vector<std::future<bool>> futures;
             futures.reserve(tasks.size());
 
-            for (const auto &[entry, outputPath] : tasks) {
+            for (const auto& [entry, outputPath] : tasks) {
                 futures.push_back(pool.Enqueue(
                     [entry, outputPath, &datPath, &currentCount, totalEntries,
                      &progressMutex, progressDialog, cancelFlag]() -> bool {
@@ -945,7 +945,7 @@ namespace BFView {
             }
 
             bool allSuccess = true;
-            for (auto &f : futures) {
+            for (auto& f : futures) {
                 if (!f.get())
                     allSuccess = false;
             }
@@ -990,8 +990,8 @@ namespace BFView {
     }
 
     void MainWindow::performExtraction(
-        const std::vector<const ArchiveEntry *> &entriesToExtract,
-        const QString &destinationDir) {
+        const std::vector<const ArchiveEntry*>& entriesToExtract,
+        const QString& destinationDir) {
         if (entriesToExtract.empty() || m_currentFatPath.isEmpty())
             return;
 
@@ -1007,7 +1007,7 @@ namespace BFView {
             return;
         }
 
-        auto *progressDialog = new Dialogs::ExtractProgressDialog(this);
+        auto* progressDialog = new Dialogs::ExtractProgressDialog(this);
         progressDialog->setWindowModality(Qt::WindowModal);
         progressDialog->show();
 
@@ -1024,7 +1024,7 @@ namespace BFView {
             bool allSuccess = Extractor::ExtractEntries(
                 entriesToExtract, datPath, destDirPath,
                 [progressDialog, cancelFlag](size_t current, size_t total,
-                                             const std::string &currentFile) {
+                                             const std::string& currentFile) {
                     if (cancelFlag->load())
                         return;
                     QMetaObject::invokeMethod(
@@ -1079,14 +1079,14 @@ namespace BFView {
         workerThread.detach();
     }
 
-    void MainWindow::onRequestDragOut(const ArchiveNode *node) {
+    void MainWindow::onRequestDragOut(const ArchiveNode* node) {
         if (!node)
             return;
         onRequestDragOutNodes({node});
     }
 
     void MainWindow::onRequestDragOutNodes(
-        const std::vector<const ArchiveNode *> &nodes) {
+        const std::vector<const ArchiveNode*>& nodes) {
         if (nodes.empty() || !m_currentArchive || m_currentFatPath.isEmpty())
             return;
 
@@ -1105,7 +1105,7 @@ namespace BFView {
 
         QList<QUrl> urls;
 
-        for (const auto *node : nodes) {
+        for (const auto* node : nodes) {
             if (!node)
                 continue;
             if (node->isDirectory) {
@@ -1117,8 +1117,8 @@ namespace BFView {
                 std::filesystem::create_directories(folderOutDir);
                 std::string nodePrefix = NormalizePath(node->fullPath);
 
-                std::function<void(const ArchiveNode *)> collectAndExtract =
-                    [&](const ArchiveNode *n) {
+                std::function<void(const ArchiveNode*)> collectAndExtract =
+                    [&](const ArchiveNode* n) {
                         if (!n)
                             return;
                         if (n->entryRef) {
@@ -1137,7 +1137,7 @@ namespace BFView {
                             Extractor::ExtractEntry(*n->entryRef, datStream,
                                                     fileOutPath);
                         }
-                        for (const auto &child : n->children) {
+                        for (const auto& child : n->children) {
                             collectAndExtract(child.get());
                         }
                     };
@@ -1156,15 +1156,15 @@ namespace BFView {
         if (urls.isEmpty())
             return;
 
-        auto *drag = new QDrag(this);
-        auto *mimeData = new QMimeData();
+        auto* drag = new QDrag(this);
+        auto* mimeData = new QMimeData();
         mimeData->setUrls(urls);
 
         drag->setMimeData(mimeData);
         drag->exec(Qt::CopyAction);
     }
 
-    void MainWindow::onRequestOpenFile(const ArchiveNode *node,
+    void MainWindow::onRequestOpenFile(const ArchiveNode* node,
                                        bool bypassCustomHandler,
                                        bool openWithChooser) {
         if (!node || !node->entryRef || m_currentFatPath.isEmpty())
@@ -1218,21 +1218,21 @@ namespace BFView {
         if (!selectedNodes.empty()) {
             onRequestDeleteNodes(selectedNodes);
         } else {
-            const ArchiveNode *selected = m_fileManagerView->GetSelectedNode();
+            const ArchiveNode* selected = m_fileManagerView->GetSelectedNode();
             if (selected) {
                 onRequestDeleteNode(selected);
             }
         }
     }
 
-    void MainWindow::onRequestDeleteNode(const ArchiveNode *node) {
+    void MainWindow::onRequestDeleteNode(const ArchiveNode* node) {
         if (!node)
             return;
         onRequestDeleteNodes({node});
     }
 
     void MainWindow::onRequestDeleteNodes(
-        const std::vector<const ArchiveNode *> &nodes) {
+        const std::vector<const ArchiveNode*>& nodes) {
         if (nodes.empty() || !m_currentArchive)
             return;
 
@@ -1258,27 +1258,27 @@ namespace BFView {
 
         // Collect hashes to remove
         std::vector<uint64_t> hashesToRemove;
-        std::function<void(const ArchiveNode *)> collectHashes =
-            [&](const ArchiveNode *n) {
+        std::function<void(const ArchiveNode*)> collectHashes =
+            [&](const ArchiveNode* n) {
                 if (!n)
                     return;
                 if (n->entryRef) {
                     hashesToRemove.push_back(n->entryRef->name_hash);
                 }
-                for (const auto &child : n->children) {
+                for (const auto& child : n->children) {
                     collectHashes(child.get());
                 }
             };
-        for (const auto *n : nodes) {
+        for (const auto* n : nodes) {
             collectHashes(n);
         }
 
         if (hashesToRemove.empty())
             return;
 
-        auto &entries = m_currentArchive->GetEntries();
+        auto& entries = m_currentArchive->GetEntries();
         entries.erase(std::remove_if(entries.begin(), entries.end(),
-                                     [&](const ArchiveEntry &e) {
+                                     [&](const ArchiveEntry& e) {
                                          return std::find(
                                                     hashesToRemove.begin(),
                                                     hashesToRemove.end(),
@@ -1311,7 +1311,7 @@ namespace BFView {
         if (srcFile.isEmpty())
             return;
 
-        const ArchiveNode *currentFolder =
+        const ArchiveNode* currentFolder =
             m_fileManagerView->GetCurrentFolderNode();
         std::string currentRel =
             (currentFolder && currentFolder->fullPath != "/")
@@ -1392,7 +1392,7 @@ namespace BFView {
         if (folderName.empty())
             folderName = folderPath.parent_path().filename().string();
 
-        const ArchiveNode *currentFolder =
+        const ArchiveNode* currentFolder =
             m_fileManagerView->GetCurrentFolderNode();
         std::string currentRel =
             (currentFolder && currentFolder->fullPath != "/")
@@ -1417,7 +1417,7 @@ namespace BFView {
 
         std::vector<FileToAdd> filesToAdd;
         std::error_code ec;
-        for (const auto &dirEntry :
+        for (const auto& dirEntry :
              std::filesystem::recursive_directory_iterator(folderPath, ec)) {
             if (dirEntry.is_regular_file()) {
                 auto subRel =
@@ -1455,7 +1455,7 @@ namespace BFView {
                 m_currentArchive->GetRawVersion());
         std::string errorMsg;
 
-        auto *progressDialog =
+        auto* progressDialog =
             new QProgressDialog("Adding files to archive...", "Cancel", 0,
                                 static_cast<int>(filesToAdd.size()), this);
         progressDialog->setWindowModality(Qt::WindowModal);
@@ -1500,7 +1500,7 @@ namespace BFView {
             return;
         }
 
-        const ArchiveNode *currentFolder =
+        const ArchiveNode* currentFolder =
             m_fileManagerView->GetCurrentFolderNode();
         std::string currentRel =
             (currentFolder && currentFolder->fullPath != "/")
@@ -1556,8 +1556,8 @@ namespace BFView {
             5000);
     }
 
-    void MainWindow::onFilesDropped(const QStringList &filePaths,
-                                    const QString &targetFolderRelPath) {
+    void MainWindow::onFilesDropped(const QStringList& filePaths,
+                                    const QString& targetFolderRelPath) {
         if (!m_currentArchive || m_currentFatPath.isEmpty() ||
             filePaths.isEmpty())
             return;
@@ -1570,7 +1570,7 @@ namespace BFView {
             baseTarget += "/";
 
         std::vector<FileToAdd> filesToAdd;
-        for (const QString &srcItem : filePaths) {
+        for (const QString& srcItem : filePaths) {
             std::filesystem::path p = srcItem.toStdString();
             std::error_code ec;
             if (!std::filesystem::exists(p, ec))
@@ -1583,7 +1583,7 @@ namespace BFView {
                 std::string folderName = p.filename().string();
                 if (folderName.empty())
                     folderName = p.parent_path().filename().string();
-                for (const auto &dirEntry :
+                for (const auto& dirEntry :
                      std::filesystem::recursive_directory_iterator(p, ec)) {
                     if (dirEntry.is_regular_file()) {
                         auto subRel =
@@ -1639,7 +1639,7 @@ namespace BFView {
             5000);
     }
 
-    void MainWindow::onArchiveFileDropped(const QString &fatPath) {
+    void MainWindow::onArchiveFileDropped(const QString& fatPath) {
         if (fatPath.isEmpty())
             return;
 
@@ -1655,11 +1655,11 @@ namespace BFView {
             QString("What would you like to do with '%1'?")
                 .arg(QFileInfo(fatPath).fileName()));
 
-        QPushButton *loadButton =
+        QPushButton* loadButton =
             msgBox.addButton("Load Archive", QMessageBox::AcceptRole);
-        QPushButton *addButton =
+        QPushButton* addButton =
             msgBox.addButton("Add to Current Archive", QMessageBox::ActionRole);
-        QPushButton *cancelButton =
+        QPushButton* cancelButton =
             msgBox.addButton("Cancel", QMessageBox::RejectRole);
 
         msgBox.setDefaultButton(loadButton);
@@ -1771,7 +1771,7 @@ namespace BFView {
                 "<br><br>Would you like to run defragmentation "
                 "anyway to ensure files are compressed with <b>" +
                 schemeName + "</b>?");
-            QPushButton *defragBtn =
+            QPushButton* defragBtn =
                 msg.addButton("Defragment / Compress", QMessageBox::AcceptRole);
             msg.addButton("Cancel", QMessageBox::RejectRole);
             msg.exec();
@@ -1790,7 +1790,7 @@ namespace BFView {
                 "sequentially, compress eligible files (> 31 bytes), "
                 "and update FAT offsets.<br><br>"
                 "Would you like to defragment now?");
-            QPushButton *defragBtn =
+            QPushButton* defragBtn =
                 msgBox.addButton("Defragment Now", QMessageBox::AcceptRole);
             msgBox.addButton("Cancel", QMessageBox::RejectRole);
             msgBox.setDefaultButton(defragBtn);
@@ -1801,7 +1801,7 @@ namespace BFView {
             }
         }
 
-        auto *progress = new Dialogs::DefragProgressDialog(this);
+        auto* progress = new Dialogs::DefragProgressDialog(this);
         progress->setWindowModality(Qt::WindowModal);
         progress->show();
 
@@ -1918,7 +1918,7 @@ namespace BFView {
         }
     }
 
-    void MainWindow::closeEvent(QCloseEvent *event) {
+    void MainWindow::closeEvent(QCloseEvent* event) {
         SettingsManager::GetInstance().SetGeometry(saveGeometry());
         SettingsManager::GetInstance().Save();
         QMainWindow::closeEvent(event);

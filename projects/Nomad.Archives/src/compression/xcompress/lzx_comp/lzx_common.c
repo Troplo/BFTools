@@ -90,7 +90,7 @@ unsigned lzx_get_num_main_syms(unsigned window_order) {
     return LZX_NUM_CHARS + (num_offset_slots * LZX_NUM_LEN_HEADERS);
 }
 
-static void do_translate_target(void *target, s32 input_pos) {
+static void do_translate_target(void* target, s32 input_pos) {
     s32 abs_offset, rel_offset;
 
     rel_offset = get_unaligned_le32(target);
@@ -106,7 +106,7 @@ static void do_translate_target(void *target, s32 input_pos) {
     }
 }
 
-static void undo_translate_target(void *target, s32 input_pos) {
+static void undo_translate_target(void* target, s32 input_pos) {
     s32 abs_offset, rel_offset;
 
     abs_offset = get_unaligned_le32(target);
@@ -151,8 +151,8 @@ static void undo_translate_target(void *target, s32 input_pos) {
  * in calculating the translated jump targets.  But in WIM files, this file size
  * is always the same (LZX_WIM_MAGIC_FILESIZE == 12000000).
  */
-static void lzx_e8_filter(u8 *data, u32 size,
-                          void (*process_target)(void *, s32)) {
+static void lzx_e8_filter(u8* data, u32 size,
+                          void (*process_target)(void*, s32)) {
 #if !defined(__SSE2__) && !defined(__AVX2__)
     /*
      * A worthwhile optimization is to push the end-of-buffer check into the
@@ -164,9 +164,9 @@ static void lzx_e8_filter(u8 *data, u32 size,
      * large negative number that is not valid for translation.  That is
      * exactly what we need.
      */
-    u8 *tail;
+    u8* tail;
     u8 saved_bytes[6];
-    u8 *p;
+    u8* p;
 
     if (size <= 10)
         return;
@@ -187,7 +187,7 @@ static void lzx_e8_filter(u8 *data, u32 size,
 #else
     /* SSE2 or AVX-2 optimized version for x86_64  */
 
-    u8 *p = data;
+    u8* p = data;
     u64 valid_mask = ~0;
 
     if (size <= 10)
@@ -219,17 +219,17 @@ static void lzx_e8_filter(u8 *data, u32 size,
          * positioned so that it will never be changed by a previous
          * translation before it is detected.  */
 
-        u8 *trap = p + ((data + size - p) & ~31) - 32 + 4;
+        u8* trap = p + ((data + size - p) & ~31) - 32 + 4;
         u8 saved_byte = *trap;
         *trap = 0xE8;
 
         for (;;) {
             u32 e8_mask;
-            u8 *orig_p = p;
+            u8* orig_p = p;
 #ifdef __AVX2__
             const __m256i e8_bytes = _mm256_set1_epi8(0xE8);
             for (;;) {
-                __m256i bytes = *(const __m256i *)p;
+                __m256i bytes = *(const __m256i*)p;
                 __m256i cmpresult = _mm256_cmpeq_epi8(bytes, e8_bytes);
                 e8_mask = _mm256_movemask_epi8(cmpresult);
                 if (e8_mask)
@@ -241,8 +241,8 @@ static void lzx_e8_filter(u8 *data, u32 size,
             for (;;) {
                 /* Read the next 32 bytes of data and test them
                  * for E8 bytes.  */
-                __m128i bytes1 = *(const __m128i *)p;
-                __m128i bytes2 = *(const __m128i *)(p + 16);
+                __m128i bytes1 = *(const __m128i*)p;
+                __m128i bytes2 = *(const __m128i*)(p + 16);
                 __m128i cmpresult1 = _mm_cmpeq_epi8(bytes1, e8_bytes);
                 __m128i cmpresult2 = _mm_cmpeq_epi8(bytes2, e8_bytes);
                 u32 mask1 = _mm_movemask_epi8(cmpresult1);
@@ -296,10 +296,10 @@ static void lzx_e8_filter(u8 *data, u32 size,
 #endif /* __SSE2__ || __AVX2__ */
 }
 
-void lzx_preprocess(u8 *data, u32 size) {
+void lzx_preprocess(u8* data, u32 size) {
     lzx_e8_filter(data, size, do_translate_target);
 }
 
-void lzx_postprocess(u8 *data, u32 size) {
+void lzx_postprocess(u8* data, u32 size) {
     lzx_e8_filter(data, size, undo_translate_target);
 }

@@ -42,20 +42,20 @@ namespace Nomad::Archives {
         void SetFlags02(uint8_t flags) { m_flags02 = flags; }
         [[nodiscard]] uint8_t GetFlags02() const { return m_flags02; }
 
-        [[nodiscard]] const std::vector<ArchiveEntry> &
+        [[nodiscard]] const std::vector<ArchiveEntry>&
         GetEntries() const override {
             return m_entries;
         }
-        [[nodiscard]] std::vector<ArchiveEntry> &GetEntries() override {
+        [[nodiscard]] std::vector<ArchiveEntry>& GetEntries() override {
             return m_entries;
         }
 
-        bool Read(std::istream &stream) override;
-        bool Write(std::ostream &stream) const override;
-        bool SerializeNfo(std::ostream &stream) const override;
+        bool Read(std::istream& stream) override;
+        bool Write(std::ostream& stream) const override;
+        bool SerializeNfo(std::ostream& stream) const override;
 
         [[nodiscard]] ArchiveCapacityLimits GetCapacityLimits() const override;
-        [[nodiscard]] bool Validate(std::string &errorMsg) const override;
+        [[nodiscard]] bool Validate(std::string& errorMsg) const override;
 
         [[nodiscard]] uint64_t
         ComputeNameHash(std::string_view name) const override;
@@ -70,7 +70,7 @@ namespace Nomad::Archives {
         [[nodiscard]] uint8_t
         FromCompressionScheme(CompressionScheme scheme) const override;
 
-        void AddOrUpdateEntry(const std::string &path,
+        void AddOrUpdateEntry(const std::string& path,
                               uint64_t uncompressedSize,
                               uint64_t compressedSize,
                               CompressionScheme compression,

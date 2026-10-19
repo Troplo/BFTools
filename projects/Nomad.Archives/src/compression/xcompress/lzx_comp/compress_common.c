@@ -580,7 +580,7 @@ static void gen_codewords(u32 A[], u8 lens[], const unsigned len_counts[],
 void make_canonical_huffman_code(unsigned num_syms, unsigned max_codeword_len,
                                  const u32 freqs[], u8 lens[],
                                  u32 codewords[]) {
-    u32 *A = codewords;
+    u32* A = codewords;
     unsigned num_used_syms;
 
     wimlib_assert(num_syms <= MAX_NUM_SYMS);

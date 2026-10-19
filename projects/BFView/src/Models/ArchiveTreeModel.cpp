@@ -27,7 +27,7 @@ namespace BFView::Models {
     }
 
     ArchiveTreeModel::ArchiveTreeModel(std::shared_ptr<ArchiveNode> root,
-                                       QObject *parent)
+                                       QObject* parent)
         : QAbstractItemModel(parent), m_root(std::move(root)) {
         if (!m_root) {
             m_root = std::make_shared<ArchiveNode>();
@@ -49,15 +49,15 @@ namespace BFView::Models {
         endResetModel();
     }
 
-    const ArchiveNode *
-    ArchiveTreeModel::NodeFromIndex(const QModelIndex &index) const {
+    const ArchiveNode*
+    ArchiveTreeModel::NodeFromIndex(const QModelIndex& index) const {
         if (!index.isValid())
             return m_root.get();
-        return static_cast<const ArchiveNode *>(index.internalPointer());
+        return static_cast<const ArchiveNode*>(index.internalPointer());
     }
 
     QModelIndex ArchiveTreeModel::index(int row, int column,
-                                        const QModelIndex &parent) const {
+                                        const QModelIndex& parent) const {
         if (!hasIndex(row, column, parent))
             return {};
 
@@ -68,8 +68,8 @@ namespace BFView::Models {
             return {};
         }
 
-        const auto *parentNode =
-            static_cast<const ArchiveNode *>(parent.internalPointer());
+        const auto* parentNode =
+            static_cast<const ArchiveNode*>(parent.internalPointer());
         if (parentNode && row >= 0 &&
             row < static_cast<int>(parentNode->children.size())) {
             return createIndex(row, column, parentNode->children[row].get());
@@ -77,17 +77,17 @@ namespace BFView::Models {
         return {};
     }
 
-    QModelIndex ArchiveTreeModel::parent(const QModelIndex &child) const {
+    QModelIndex ArchiveTreeModel::parent(const QModelIndex& child) const {
         if (!child.isValid())
             return {};
 
-        const auto *childNode =
-            static_cast<const ArchiveNode *>(child.internalPointer());
+        const auto* childNode =
+            static_cast<const ArchiveNode*>(child.internalPointer());
         if (!childNode || childNode == m_root.get()) {
             return {};
         }
 
-        const ArchiveNode *parentNode = childNode->parent;
+        const ArchiveNode* parentNode = childNode->parent;
         if (!parentNode) {
             return {};
         }
@@ -97,10 +97,10 @@ namespace BFView::Models {
         }
 
         return createIndex(static_cast<int>(parentNode->RowInParent()), 0,
-                           const_cast<ArchiveNode *>(parentNode));
+                           const_cast<ArchiveNode*>(parentNode));
     }
 
-    int ArchiveTreeModel::rowCount(const QModelIndex &parent) const {
+    int ArchiveTreeModel::rowCount(const QModelIndex& parent) const {
         if (parent.column() > 0)
             return 0;
 
@@ -108,23 +108,23 @@ namespace BFView::Models {
             return m_root ? 1 : 0;
         }
 
-        const auto *parentNode =
-            static_cast<const ArchiveNode *>(parent.internalPointer());
+        const auto* parentNode =
+            static_cast<const ArchiveNode*>(parent.internalPointer());
         return (parentNode && parentNode->isDirectory)
                    ? static_cast<int>(parentNode->children.size())
                    : 0;
     }
 
-    int ArchiveTreeModel::columnCount(const QModelIndex & /*parent*/) const {
+    int ArchiveTreeModel::columnCount(const QModelIndex& /*parent*/) const {
         return ColumnCount;
     }
 
-    QVariant ArchiveTreeModel::data(const QModelIndex &index, int role) const {
+    QVariant ArchiveTreeModel::data(const QModelIndex& index, int role) const {
         if (!index.isValid())
             return {};
 
-        const auto *node =
-            static_cast<const ArchiveNode *>(index.internalPointer());
+        const auto* node =
+            static_cast<const ArchiveNode*>(index.internalPointer());
         if (!node)
             return {};
 

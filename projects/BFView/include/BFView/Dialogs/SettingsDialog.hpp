@@ -17,7 +17,7 @@ namespace BFView {
         Q_OBJECT
 
       public:
-        explicit SettingsDialog(QWidget *parent = nullptr);
+        explicit SettingsDialog(QWidget* parent = nullptr);
         ~SettingsDialog() override = default;
 
       private slots:
@@ -32,35 +32,35 @@ namespace BFView {
         void PopulateProjectCombos();
         void PopulateCompressionCombos();
 
-        QComboBox *m_themeCombo{nullptr};
-        QCheckBox *m_confirmDeleteCheckBox{nullptr};
-        QCheckBox *m_confirmAddCheckBox{nullptr};
-        QCheckBox *m_customHandlersCheckBox{nullptr};
-        QCheckBox *m_autoRegisterAssocCheckBox{nullptr};
-        QLineEdit *m_tempPathEdit{nullptr};
-        QLineEdit *m_extractPathEdit{nullptr};
-        QPushButton *m_browseTempButton{nullptr};
-        QPushButton *m_browseExtractButton{nullptr};
-        QPushButton *m_registerAssocNowBtn{nullptr};
+        QComboBox* m_themeCombo{nullptr};
+        QCheckBox* m_confirmDeleteCheckBox{nullptr};
+        QCheckBox* m_confirmAddCheckBox{nullptr};
+        QCheckBox* m_customHandlersCheckBox{nullptr};
+        QCheckBox* m_autoRegisterAssocCheckBox{nullptr};
+        QLineEdit* m_tempPathEdit{nullptr};
+        QLineEdit* m_extractPathEdit{nullptr};
+        QPushButton* m_browseTempButton{nullptr};
+        QPushButton* m_browseExtractButton{nullptr};
+        QPushButton* m_registerAssocNowBtn{nullptr};
 
-        QLineEdit *m_projectsDirEdit{nullptr};
-        QPushButton *m_browseProjectsDirButton{nullptr};
+        QLineEdit* m_projectsDirEdit{nullptr};
+        QPushButton* m_browseProjectsDirButton{nullptr};
 
-        QComboBox *m_fatv2_v7ProjectCombo{nullptr};
-        QComboBox *m_fatv2_v8ProjectCombo{nullptr};
-        QComboBox *m_fatv3_v7ProjectCombo{nullptr};
-        QComboBox *m_fatv3_v8ProjectCombo{nullptr};
-        QComboBox *m_fatv5_v11ProjectCombo{nullptr};
-        QComboBox *m_fatv5_v12ProjectCombo{nullptr};
-        QComboBox *m_fatv5_v13ProjectCombo{nullptr};
+        QComboBox* m_fatv2_v7ProjectCombo{nullptr};
+        QComboBox* m_fatv2_v8ProjectCombo{nullptr};
+        QComboBox* m_fatv3_v7ProjectCombo{nullptr};
+        QComboBox* m_fatv3_v8ProjectCombo{nullptr};
+        QComboBox* m_fatv5_v11ProjectCombo{nullptr};
+        QComboBox* m_fatv5_v12ProjectCombo{nullptr};
+        QComboBox* m_fatv5_v13ProjectCombo{nullptr};
 
-        QComboBox *m_fatv2_v7CompressionCombo{nullptr};
-        QComboBox *m_fatv2_v8CompressionCombo{nullptr};
-        QComboBox *m_fatv3_v7CompressionCombo{nullptr};
-        QComboBox *m_fatv3_v8CompressionCombo{nullptr};
-        QComboBox *m_fatv5_v11CompressionCombo{nullptr};
-        QComboBox *m_fatv5_v12CompressionCombo{nullptr};
-        QComboBox *m_fatv5_v13CompressionCombo{nullptr};
+        QComboBox* m_fatv2_v7CompressionCombo{nullptr};
+        QComboBox* m_fatv2_v8CompressionCombo{nullptr};
+        QComboBox* m_fatv3_v7CompressionCombo{nullptr};
+        QComboBox* m_fatv3_v8CompressionCombo{nullptr};
+        QComboBox* m_fatv5_v11CompressionCombo{nullptr};
+        QComboBox* m_fatv5_v12CompressionCombo{nullptr};
+        QComboBox* m_fatv5_v13CompressionCombo{nullptr};
     };
 
 } // namespace BFView

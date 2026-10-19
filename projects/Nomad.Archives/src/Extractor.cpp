@@ -12,9 +12,9 @@
 #include <mutex>
 
 namespace Nomad::Archives {
-    bool Extractor::ExtractEntry(const ArchiveEntry &entry,
-                                 std::istream &datStream,
-                                 const std::filesystem::path &outputFilePath) {
+    bool Extractor::ExtractEntry(const ArchiveEntry& entry,
+                                 std::istream& datStream,
+                                 const std::filesystem::path& outputFilePath) {
         if (!datStream)
             return false;
 
@@ -57,7 +57,7 @@ namespace Nomad::Archives {
             return true;
         } else {
             std::vector<uint8_t> compressedBuffer(entry.compressed_size);
-            datStream.read(reinterpret_cast<char *>(compressedBuffer.data()),
+            datStream.read(reinterpret_cast<char*>(compressedBuffer.data()),
                            entry.compressed_size);
             if (datStream.gcount() <
                 static_cast<std::streamsize>(entry.compressed_size)) {
@@ -82,24 +82,24 @@ namespace Nomad::Archives {
                     errorMsg);
                 // Write raw compressed bytes as fallback
                 outFile.write(
-                    reinterpret_cast<const char *>(compressedBuffer.data()),
+                    reinterpret_cast<const char*>(compressedBuffer.data()),
                     compressedBuffer.size());
                 return false;
             }
 
             outFile.write(
-                reinterpret_cast<const char *>(uncompressedBuffer.data()),
+                reinterpret_cast<const char*>(uncompressedBuffer.data()),
                 uncompressedBuffer.size());
             return true;
         }
     }
 
     bool
-    Extractor::ExtractEntries(const std::vector<const ArchiveEntry *> &entries,
-                              const std::filesystem::path &datPath,
-                              const std::filesystem::path &outputDir,
+    Extractor::ExtractEntries(const std::vector<const ArchiveEntry*>& entries,
+                              const std::filesystem::path& datPath,
+                              const std::filesystem::path& outputDir,
                               ProgressCallback progress, size_t numThreads,
-                              const std::atomic<bool> *cancelFlag) {
+                              const std::atomic<bool>* cancelFlag) {
         size_t total = entries.size();
         if (total == 0)
             return true;
@@ -122,7 +122,7 @@ namespace Nomad::Archives {
 
             size_t current = 0;
             bool allSuccess = true;
-            for (const auto *entry : entries) {
+            for (const auto* entry : entries) {
                 if (cancelFlag && cancelFlag->load()) {
                     Logger::Warn("Extractor",
                                  "Extraction cancelled by user at entry {}/{}",
@@ -151,7 +151,7 @@ namespace Nomad::Archives {
         std::vector<std::future<bool>> futures;
         futures.reserve(total);
 
-        for (const auto *entry : entries) {
+        for (const auto* entry : entries) {
             futures.push_back(pool.Enqueue([entry, &datPath, &outputDir,
                                             progress, &currentCount, total,
                                             &progressMutex,
@@ -181,7 +181,7 @@ namespace Nomad::Archives {
         }
 
         bool allSuccess = true;
-        for (auto &f : futures) {
+        for (auto& f : futures) {
             if (!f.get()) {
                 allSuccess = false;
             }
@@ -201,17 +201,17 @@ namespace Nomad::Archives {
         return allSuccess;
     }
 
-    bool Extractor::ExtractAll(const IArchive &archive,
-                               const std::filesystem::path &fatPath,
-                               const std::filesystem::path &outputDir,
+    bool Extractor::ExtractAll(const IArchive& archive,
+                               const std::filesystem::path& fatPath,
+                               const std::filesystem::path& outputDir,
                                ProgressCallback progress, size_t numThreads) {
         std::filesystem::path datPath = fatPath;
         datPath.replace_extension(".dat");
 
-        const auto &entries = archive.GetEntries();
-        std::vector<const ArchiveEntry *> entryPtrs;
+        const auto& entries = archive.GetEntries();
+        std::vector<const ArchiveEntry*> entryPtrs;
         entryPtrs.reserve(entries.size());
-        for (const auto &entry : entries) {
+        for (const auto& entry : entries) {
             entryPtrs.push_back(&entry);
         }
 
@@ -219,10 +219,10 @@ namespace Nomad::Archives {
                               numThreads);
     }
 
-    bool Extractor::ExtractAll(const IArchive &archive, std::istream &datStream,
-                               const std::filesystem::path &outputDir,
+    bool Extractor::ExtractAll(const IArchive& archive, std::istream& datStream,
+                               const std::filesystem::path& outputDir,
                                ProgressCallback progress, size_t numThreads) {
-        const auto &entries = archive.GetEntries();
+        const auto& entries = archive.GetEntries();
         size_t total = entries.size();
         if (total == 0)
             return true;
@@ -233,7 +233,7 @@ namespace Nomad::Archives {
 
         if (numThreads <= 1) {
             size_t current = 0;
-            for (const auto &entry : entries) {
+            for (const auto& entry : entries) {
                 current++;
                 std::filesystem::path normEntryPath = NormalizePath(entry.path);
                 std::filesystem::path entryOutPath = outputDir / normEntryPath;

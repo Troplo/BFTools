@@ -95,11 +95,11 @@ static void PrintUsage(std::string_view execName) {
            "message.\n";
 }
 
-static void PrintNode(const ArchiveNode &node, int indent = 0) {
+static void PrintNode(const ArchiveNode& node, int indent = 0) {
     std::string padding(indent * 2, ' ');
     if (node.isDirectory) {
         std::cout << std::format("{}[DIR] {}\n", padding, node.name);
-        for (const auto &child : node.children) {
+        for (const auto& child : node.children) {
             PrintNode(*child, indent + 1);
         }
     } else {
@@ -115,7 +115,7 @@ static void PrintNode(const ArchiveNode &node, int indent = 0) {
 }
 
 static std::filesystem::path
-ResolveFatPath(const std::filesystem::path &inputPath) {
+ResolveFatPath(const std::filesystem::path& inputPath) {
     std::string ext = inputPath.extension().string();
     std::string extLower = ext;
     std::transform(
@@ -148,7 +148,7 @@ ResolveFatPath(const std::filesystem::path &inputPath) {
 }
 
 static std::string
-SelectProjectInteractively(const std::string &currentProject) {
+SelectProjectInteractively(const std::string& currentProject) {
     if (!currentProject.empty())
         return currentProject;
 
@@ -184,7 +184,7 @@ SelectProjectInteractively(const std::string &currentProject) {
                 return projectNames[choice - 1];
             }
         } catch (...) {
-            for (const auto &name : projectNames) {
+            for (const auto& name : projectNames) {
                 if (name == line)
                     return name;
             }
@@ -195,7 +195,7 @@ SelectProjectInteractively(const std::string &currentProject) {
 }
 
 static std::shared_ptr<ProjectConfig>
-ResolveAndReportProject(std::string &projectName) {
+ResolveAndReportProject(std::string& projectName) {
     projectName = SelectProjectInteractively(projectName);
     if (!projectName.empty()) {
         auto projConfig = ProjectManager::GetInstance().GetProject(projectName);
@@ -211,7 +211,7 @@ ResolveAndReportProject(std::string &projectName) {
     return nullptr;
 }
 
-static int DoPack(const std::filesystem::path &inputDir,
+static int DoPack(const std::filesystem::path& inputDir,
                   std::filesystem::path fatOutPath, std::string projectName,
                   ArchiveVersion forcedFatVersion, uint32_t forcedRawVersion,
                   CompressionScheme forcedCompression,
@@ -335,7 +335,7 @@ static int DoPack(const std::filesystem::path &inputDir,
 
     ThreadPool pool(numThreads);
     std::vector<std::filesystem::path> allFiles;
-    for (const auto &dirEntry :
+    for (const auto& dirEntry :
          std::filesystem::recursive_directory_iterator(inputDir)) {
         if (dirEntry.is_regular_file()) {
             std::filesystem::path p = dirEntry.path();
@@ -356,7 +356,7 @@ static int DoPack(const std::filesystem::path &inputDir,
         futures.reserve(batchEnd - batchStart);
 
         for (size_t i = batchStart; i < batchEnd; ++i) {
-            const auto &filePath = allFiles[i];
+            const auto& filePath = allFiles[i];
             futures.push_back(pool.Enqueue(
                 [filePath, inputDir, packCompression]() -> ProcessedFile {
                     std::filesystem::path relPath =
@@ -379,7 +379,7 @@ static int DoPack(const std::filesystem::path &inputDir,
                     std::vector<uint8_t> uncompressedData(fileSize);
                     if (fileSize > 0) {
                         srcFile.read(
-                            reinterpret_cast<char *>(uncompressedData.data()),
+                            reinterpret_cast<char*>(uncompressedData.data()),
                             fileSize);
                     }
 
@@ -409,7 +409,7 @@ static int DoPack(const std::filesystem::path &inputDir,
                 }));
         }
 
-        for (auto &fut : futures) {
+        for (auto& fut : futures) {
             ProcessedFile item = fut.get();
             if (item.relPathStr.empty())
                 continue;
@@ -423,7 +423,7 @@ static int DoPack(const std::filesystem::path &inputDir,
 
             if (!item.payloadData.empty()) {
                 datStream.write(
-                    reinterpret_cast<const char *>(item.payloadData.data()),
+                    reinterpret_cast<const char*>(item.payloadData.data()),
                     item.payloadData.size());
             }
 
@@ -462,7 +462,7 @@ static int DoPack(const std::filesystem::path &inputDir,
     return 0;
 }
 
-static int DoUnpack(const std::filesystem::path &inputPath,
+static int DoUnpack(const std::filesystem::path& inputPath,
                     std::filesystem::path outputDir, std::string projectName,
                     unsigned int numThreads) {
     std::filesystem::path fatPath = ResolveFatPath(inputPath);
@@ -507,7 +507,7 @@ static int DoUnpack(const std::filesystem::path &inputPath,
 
     Extractor::ExtractAll(
         *archive, fatPath, outputDir,
-        [](size_t current, size_t total, const std::string &name) {
+        [](size_t current, size_t total, const std::string& name) {
             if (verbose)
                 std::cout << std::format("[{}/{}] Extracted {}\n", current,
                                          total, name);
@@ -528,7 +528,7 @@ static int DoUnpack(const std::filesystem::path &inputPath,
     return 0;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     ZoneScopedN("BFTools::Main");
     Nexus::MemoryManager::SetReady(true);
     if (argc < 2) {
@@ -740,11 +740,11 @@ int main(int argc, char *argv[]) {
         std::string normPattern = NormalizePath(targetPattern);
         bool patternHasSlash = (normPattern.find('/') != std::string::npos);
 
-        std::vector<const ArchiveEntry *> matchingEntries;
+        std::vector<const ArchiveEntry*> matchingEntries;
 
         if (!hasWildcards) {
             // 1. Exact path match
-            for (const auto &entry : archive->GetEntries()) {
+            for (const auto& entry : archive->GetEntries()) {
                 if (entry.path == targetPattern || entry.path == normPattern ||
                     NormalizePath(entry.path) == normPattern) {
                     matchingEntries.push_back(&entry);
@@ -771,7 +771,7 @@ int main(int argc, char *argv[]) {
                 } catch (...) {
                 }
 
-                for (const auto &entry : archive->GetEntries()) {
+                for (const auto& entry : archive->GetEntries()) {
                     if (entry.name_hash == targetHash ||
                         (isNumeric && entry.name_hash == numericHash)) {
                         matchingEntries.push_back(&entry);
@@ -782,7 +782,7 @@ int main(int argc, char *argv[]) {
 
             // 3. Exact filename match (if pattern has no slash)
             if (matchingEntries.empty() && !patternHasSlash) {
-                for (const auto &entry : archive->GetEntries()) {
+                for (const auto& entry : archive->GetEntries()) {
                     if (std::filesystem::path(entry.path).filename() ==
                         targetPattern) {
                         matchingEntries.push_back(&entry);
@@ -794,7 +794,7 @@ int main(int argc, char *argv[]) {
             // trailing slash)
             if (matchingEntries.empty()) {
                 std::string dirPrefix = normPattern + "/";
-                for (const auto &entry : archive->GetEntries()) {
+                for (const auto& entry : archive->GetEntries()) {
                     std::string normEntry = NormalizePath(entry.path);
                     if (normEntry.starts_with(dirPrefix)) {
                         matchingEntries.push_back(&entry);
@@ -803,7 +803,7 @@ int main(int argc, char *argv[]) {
             }
         } else {
             // Wildcard glob match
-            for (const auto &entry : archive->GetEntries()) {
+            for (const auto& entry : archive->GetEntries()) {
                 std::string normEntry = NormalizePath(entry.path);
                 bool match = MatchGlob(normPattern, normEntry);
                 if (!match && !patternHasSlash) {
@@ -827,7 +827,7 @@ int main(int argc, char *argv[]) {
 
         // Single entry exact extraction
         if (matchingEntries.size() == 1 && !hasWildcards) {
-            const auto *found = matchingEntries[0];
+            const auto* found = matchingEntries[0];
             std::filesystem::path targetOutPath;
             if (positionalArgs.size() >= 4) {
                 std::filesystem::path specifiedOut = positionalArgs[3];
@@ -886,7 +886,7 @@ int main(int argc, char *argv[]) {
 
         bool success = Extractor::ExtractEntries(
             matchingEntries, datPath, outputDir,
-            [](size_t current, size_t total, const std::string &name) {
+            [](size_t current, size_t total, const std::string& name) {
                 if (verbose)
                     std::cout << std::format("[{}/{}] Extracted {}\n", current,
                                              total, name);
@@ -954,7 +954,7 @@ int main(int argc, char *argv[]) {
                 bool patternHasSlash =
                     (normPattern.find('/') != std::string::npos);
                 std::vector<ArchiveEntry> filtered;
-                for (const auto &entry : archive->GetEntries()) {
+                for (const auto& entry : archive->GetEntries()) {
                     std::string normEntry = NormalizePath(entry.path);
                     bool match = MatchGlob(normPattern, normEntry);
                     if (!match && !patternHasSlash) {
@@ -968,7 +968,7 @@ int main(int argc, char *argv[]) {
                     }
                 }
                 auto root = DirectoryTreeBuilder::Build(filtered);
-                for (const auto &child : root->children) {
+                for (const auto& child : root->children) {
                     PrintNode(*child, 0);
                 }
                 std::cout << std::format("\nTotal matched entries: {}\n",
@@ -977,7 +977,7 @@ int main(int argc, char *argv[]) {
                 std::cout << std::format("Directory Listing for '{}':\n",
                                          inputPath.string());
                 auto root = DirectoryTreeBuilder::Build(archive->GetEntries());
-                for (const auto &child : root->children) {
+                for (const auto& child : root->children) {
                     PrintNode(*child, 0);
                 }
             }
@@ -1009,7 +1009,7 @@ int main(int argc, char *argv[]) {
         }
 
         bool analyzeOnly = false;
-        for (const auto &opt : options) {
+        for (const auto& opt : options) {
             if (opt == "--analyze") {
                 analyzeOnly = true;
             }

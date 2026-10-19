@@ -6,14 +6,14 @@
 #include <QVBoxLayout>
 
 namespace BFView::Dialogs {
-    DefragProgressDialog::DefragProgressDialog(QWidget *parent)
+    DefragProgressDialog::DefragProgressDialog(QWidget* parent)
         : QDialog(parent),
           m_cancelFlag(std::make_shared<std::atomic<bool>>(false)) {
         setWindowTitle(tr("Defragmenting Archive..."));
         setModal(true);
         setFixedSize(500, 160);
 
-        auto *layout = new QVBoxLayout(this);
+        auto* layout = new QVBoxLayout(this);
         layout->setContentsMargins(16, 16, 16, 16);
         layout->setSpacing(10);
 
@@ -40,7 +40,7 @@ namespace BFView::Dialogs {
     }
 
     void DefragProgressDialog::SetStatus(int current, int total,
-                                         const QString &details) {
+                                         const QString& details) {
         if (total > 0) {
             int percent = static_cast<int>(
                 (static_cast<double>(current) / static_cast<double>(total)) *

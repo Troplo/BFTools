@@ -18,7 +18,7 @@
 #include <QToolButton>
 
 namespace BFView::Views {
-    LocationBreadcrumb::LocationBreadcrumb(QWidget *parent) : QWidget(parent) {
+    LocationBreadcrumb::LocationBreadcrumb(QWidget* parent) : QWidget(parent) {
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         setFixedHeight(32);
         SetupUi();
@@ -64,7 +64,7 @@ namespace BFView::Views {
     }
 
     void LocationBreadcrumb::SetupUi() {
-        auto *outerLayout = new QHBoxLayout(this);
+        auto* outerLayout = new QHBoxLayout(this);
         outerLayout->setContentsMargins(0, 0, 0, 0);
         outerLayout->setSpacing(0);
 
@@ -72,7 +72,7 @@ namespace BFView::Views {
         m_containerFrame->setObjectName(QStringLiteral("locationBarContainer"));
         m_containerFrame->installEventFilter(this);
 
-        auto *frameLayout = new QHBoxLayout(m_containerFrame);
+        auto* frameLayout = new QHBoxLayout(m_containerFrame);
         frameLayout->setContentsMargins(2, 1, 2, 1);
         frameLayout->setSpacing(0);
 
@@ -207,10 +207,10 @@ namespace BFView::Views {
 
         bool isFirst = true;
         for (int i = 0; i < m_breadcrumbLayout->count(); ++i) {
-            QLayoutItem *item = m_breadcrumbLayout->itemAt(i);
+            QLayoutItem* item = m_breadcrumbLayout->itemAt(i);
             if (!item)
                 continue;
-            auto *btn = qobject_cast<QToolButton *>(item->widget());
+            auto* btn = qobject_cast<QToolButton*>(item->widget());
             if (!btn)
                 continue;
 
@@ -227,10 +227,10 @@ namespace BFView::Views {
         }
     }
 
-    void LocationBreadcrumb::SetPath(const QString &path) {
+    void LocationBreadcrumb::SetPath(const QString& path) {
         m_currentPath = path.isEmpty() ? QStringLiteral("/") : path;
 
-        QLayoutItem *child;
+        QLayoutItem* child;
         while ((child = m_breadcrumbLayout->takeAt(0)) != nullptr) {
             delete child->widget();
             delete child;
@@ -240,7 +240,7 @@ namespace BFView::Views {
         const QIcon folderIcon = GetFolderIcon();
         const QIcon rootIcon = GetRootIcon();
 
-        auto *rootBtn = new QToolButton(m_breadcrumbContainer);
+        auto* rootBtn = new QToolButton(m_breadcrumbContainer);
         rootBtn->setProperty("isBreadcrumbSegment", true);
         rootBtn->setIcon(rootIcon);
         rootBtn->setIconSize(QSize(16, 16));
@@ -268,11 +268,11 @@ namespace BFView::Views {
         QString accumulatedPath = "";
 
         for (int i = 0; i < segments.size(); ++i) {
-            const QString &segment = segments[i];
+            const QString& segment = segments[i];
             accumulatedPath += "/" + segment;
             const QString segmentFullPath = accumulatedPath;
 
-            auto *arrowBtn = new QToolButton(m_breadcrumbContainer);
+            auto* arrowBtn = new QToolButton(m_breadcrumbContainer);
             arrowBtn->setProperty("isBreadcrumbArrow", true);
             arrowBtn->setIcon(arrowIcon);
             arrowBtn->setIconSize(QSize(10, 10));
@@ -291,14 +291,14 @@ namespace BFView::Views {
                 const QStringList subfolders =
                     m_subfolderProvider(normalizedParent);
                 if (!subfolders.isEmpty()) {
-                    auto *menu = new QMenu(arrowBtn);
-                    for (const QString &sub : subfolders) {
+                    auto* menu = new QMenu(arrowBtn);
+                    for (const QString& sub : subfolders) {
                         QString targetPath = normalizedParent;
                         if (!targetPath.endsWith('/'))
                             targetPath += '/';
                         targetPath += sub;
 
-                        QAction *act = menu->addAction(folderIcon, sub);
+                        QAction* act = menu->addAction(folderIcon, sub);
                         if (sub.compare(segment, Qt::CaseInsensitive) == 0) {
                             QFont font = act->font();
                             font.setBold(true);
@@ -315,7 +315,7 @@ namespace BFView::Views {
 
             m_breadcrumbLayout->addWidget(arrowBtn);
 
-            auto *btn = new QToolButton(m_breadcrumbContainer);
+            auto* btn = new QToolButton(m_breadcrumbContainer);
             btn->setProperty("isBreadcrumbSegment", true);
             btn->setIcon(folderIcon);
             btn->setIconSize(QSize(14, 14));
@@ -359,23 +359,23 @@ namespace BFView::Views {
         m_containerFrame->style()->polish(m_containerFrame);
     }
 
-    bool LocationBreadcrumb::eventFilter(QObject *watched, QEvent *event) {
+    bool LocationBreadcrumb::eventFilter(QObject* watched, QEvent* event) {
         if (watched == m_containerFrame || watched == m_scrollArea ||
             watched == m_breadcrumbContainer ||
             (m_scrollArea && watched == m_scrollArea->viewport())) {
             if (event->type() == QEvent::MouseButtonPress) {
-                auto *mouseEvent = static_cast<QMouseEvent *>(event);
+                auto* mouseEvent = static_cast<QMouseEvent*>(event);
                 if (mouseEvent->button() == Qt::LeftButton) {
-                    QWidget *child = childAt(
+                    QWidget* child = childAt(
                         mapFromGlobal(mouseEvent->globalPosition().toPoint()));
-                    if (!child || !qobject_cast<QToolButton *>(child)) {
+                    if (!child || !qobject_cast<QToolButton*>(child)) {
                         SwitchToEditablePath();
                         return true;
                     }
                 }
             }
         } else if (watched == m_pathEdit && event->type() == QEvent::KeyPress) {
-            auto *keyEvent = static_cast<QKeyEvent *>(event);
+            auto* keyEvent = static_cast<QKeyEvent*>(event);
             if (keyEvent->key() == Qt::Key_Escape) {
                 SwitchToBreadcrumbs();
                 return true;
@@ -386,7 +386,7 @@ namespace BFView::Views {
         return QWidget::eventFilter(watched, event);
     }
 
-    void LocationBreadcrumb::changeEvent(QEvent *event) {
+    void LocationBreadcrumb::changeEvent(QEvent* event) {
         if (event->type() == QEvent::PaletteChange ||
             event->type() == QEvent::ThemeChange) {
             UpdateIcons();

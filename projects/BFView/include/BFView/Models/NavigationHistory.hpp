@@ -14,11 +14,11 @@ namespace BFView::Models {
         Q_OBJECT
 
       public:
-        explicit NavigationHistory(QObject *parent = nullptr);
+        explicit NavigationHistory(QObject* parent = nullptr);
         ~NavigationHistory() override = default;
 
         void Clear();
-        void NavigateTo(const QString &path);
+        void NavigateTo(const QString& path);
         [[nodiscard]] QString GoBack();
         [[nodiscard]] QString GoForward();
         [[nodiscard]] QString GetParentPath() const;

@@ -15,7 +15,7 @@
 #include <QStandardPaths>
 
 namespace BFView {
-    SettingsManager &SettingsManager::GetInstance() {
+    SettingsManager& SettingsManager::GetInstance() {
         static SettingsManager instance;
         return instance;
     }
@@ -42,7 +42,7 @@ namespace BFView {
         return QString::fromStdString(defaultDir.string());
     }
 
-    void SettingsManager::SetProjectsDirectory(const QString &dir) {
+    void SettingsManager::SetProjectsDirectory(const QString& dir) {
         m_projectsDirectory = dir.trimmed();
         if (!m_projectsDirectory.isEmpty()) {
             Nomad::Archives::ProjectManager::GetInstance().SetProjectsRoot(
@@ -77,14 +77,14 @@ namespace BFView {
 
     void
     SettingsManager::SetDefaultProject(Nomad::Archives::ArchiveVersion version,
-                                       const QString &project) {
+                                       const QString& project) {
         SetDefaultProject(version, 0, project);
     }
 
     void
     SettingsManager::SetDefaultProject(Nomad::Archives::ArchiveVersion version,
                                        uint32_t rawVersion,
-                                       const QString &project) {
+                                       const QString& project) {
         switch (version) {
         case Nomad::Archives::ArchiveVersion::FATv2:
             if (rawVersion == 7)
@@ -257,7 +257,7 @@ namespace BFView {
         m_defaultProjectFATv5_v13 =
             obj.value("defaultProjectFATv5_v13").toString(legacyProjV5);
 
-        auto parseComp = [](const QJsonValue &val,
+        auto parseComp = [](const QJsonValue& val,
                             Nomad::Archives::CompressionScheme fallback) {
             if (!val.isString())
                 return fallback;

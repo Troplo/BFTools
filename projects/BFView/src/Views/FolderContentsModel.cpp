@@ -26,33 +26,33 @@ namespace BFView::Views {
         return QString("%1 GB").arg(gb, 0, 'f', 2);
     }
 
-    FolderContentsModel::FolderContentsModel(QObject *parent)
+    FolderContentsModel::FolderContentsModel(QObject* parent)
         : QAbstractItemModel(parent) {}
 
-    void FolderContentsModel::SetFolderNode(const ArchiveNode *folderNode) {
+    void FolderContentsModel::SetFolderNode(const ArchiveNode* folderNode) {
         beginResetModel();
         m_folderNode = folderNode;
         endResetModel();
     }
 
-    const ArchiveNode *
-    FolderContentsModel::NodeFromIndex(const QModelIndex &index) const {
+    const ArchiveNode*
+    FolderContentsModel::NodeFromIndex(const QModelIndex& index) const {
         if (!index.isValid())
             return m_folderNode;
-        return static_cast<const ArchiveNode *>(index.internalPointer());
+        return static_cast<const ArchiveNode*>(index.internalPointer());
     }
 
     QModelIndex FolderContentsModel::index(int row, int column,
-                                           const QModelIndex &parent) const {
+                                           const QModelIndex& parent) const {
         if (!hasIndex(row, column, parent))
             return {};
 
-        const ArchiveNode *parentNode = nullptr;
+        const ArchiveNode* parentNode = nullptr;
         if (!parent.isValid()) {
             parentNode = m_folderNode;
         } else {
             parentNode =
-                static_cast<const ArchiveNode *>(parent.internalPointer());
+                static_cast<const ArchiveNode*>(parent.internalPointer());
         }
 
         if (parentNode && row >= 0 &&
@@ -62,39 +62,39 @@ namespace BFView::Views {
         return {};
     }
 
-    QModelIndex FolderContentsModel::parent(const QModelIndex &child) const {
+    QModelIndex FolderContentsModel::parent(const QModelIndex& child) const {
         if (!child.isValid())
             return {};
 
-        const auto *childNode =
-            static_cast<const ArchiveNode *>(child.internalPointer());
+        const auto* childNode =
+            static_cast<const ArchiveNode*>(child.internalPointer());
         if (!childNode)
             return {};
 
-        const ArchiveNode *parentNode = childNode->parent;
+        const ArchiveNode* parentNode = childNode->parent;
         if (!parentNode || parentNode == m_folderNode) {
             return {};
         }
 
-        const ArchiveNode *grandParentNode = parentNode->parent;
+        const ArchiveNode* grandParentNode = parentNode->parent;
         if (!grandParentNode) {
             return {};
         }
 
         return createIndex(static_cast<int>(parentNode->RowInParent()), 0,
-                           const_cast<ArchiveNode *>(parentNode));
+                           const_cast<ArchiveNode*>(parentNode));
     }
 
-    int FolderContentsModel::rowCount(const QModelIndex &parent) const {
+    int FolderContentsModel::rowCount(const QModelIndex& parent) const {
         if (parent.column() > 0)
             return 0;
 
-        const ArchiveNode *parentNode = nullptr;
+        const ArchiveNode* parentNode = nullptr;
         if (!parent.isValid()) {
             parentNode = m_folderNode;
         } else {
             parentNode =
-                static_cast<const ArchiveNode *>(parent.internalPointer());
+                static_cast<const ArchiveNode*>(parent.internalPointer());
         }
 
         return (parentNode && parentNode->isDirectory)
@@ -102,17 +102,17 @@ namespace BFView::Views {
                    : 0;
     }
 
-    int FolderContentsModel::columnCount(const QModelIndex & /*parent*/) const {
+    int FolderContentsModel::columnCount(const QModelIndex& /*parent*/) const {
         return ColumnCount;
     }
 
-    QVariant FolderContentsModel::data(const QModelIndex &index,
+    QVariant FolderContentsModel::data(const QModelIndex& index,
                                        int role) const {
         if (!index.isValid())
             return {};
 
-        const auto *node =
-            static_cast<const ArchiveNode *>(index.internalPointer());
+        const auto* node =
+            static_cast<const ArchiveNode*>(index.internalPointer());
         if (!node)
             return {};
 

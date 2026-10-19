@@ -6,7 +6,7 @@
 #include "version.h"
 
 namespace Nomad::Archives {
-    const char *ProjectInterface::GetVersion() { return PROJECT_VERSION; }
+    const char* ProjectInterface::GetVersion() { return PROJECT_VERSION; }
 
-    const char *ProjectInterface::GetBuildDate() { return PROJECT_BUILD_DATE; }
+    const char* ProjectInterface::GetBuildDate() { return PROJECT_BUILD_DATE; }
 } // namespace Nomad::Archives

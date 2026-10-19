@@ -155,7 +155,7 @@ namespace Nomad::Archives {
             0x2D02EF8Du};
 
         // CRC-64 (ECMA-182)
-        static constexpr uint64_t CreateCRC64(const char *data,
+        static constexpr uint64_t CreateCRC64(const char* data,
                                               size_t length) noexcept {
             uint64_t result = 0;
             for (size_t i = 0; i < length; ++i) {
@@ -172,9 +172,9 @@ namespace Nomad::Archives {
 
         static constexpr uint32_t CRC32_Init() noexcept { return 0xFFFFFFFFu; }
 
-        static constexpr uint32_t CRC32_Update(uint32_t crc, const void *data,
+        static constexpr uint32_t CRC32_Update(uint32_t crc, const void* data,
                                                size_t size) noexcept {
-            const auto *ptr = static_cast<const uint8_t *>(data);
+            const auto* ptr = static_cast<const uint8_t*>(data);
             for (size_t i = 0; i < size; ++i) {
                 crc = (crc >> 8) ^ CRCtable32[(crc ^ ptr[i]) & 0xFF];
             }
@@ -205,7 +205,7 @@ namespace Nomad::Archives {
         }
 
         // FNV-1a
-        static constexpr uint64_t InternalFnv64(const char *data,
+        static constexpr uint64_t InternalFnv64(const char* data,
                                                 size_t length) noexcept {
             uint64_t hash = 0xcbf29ce484222325ULL;
             for (size_t i = 0; i < length; ++i) {
@@ -219,7 +219,7 @@ namespace Nomad::Archives {
             return InternalFnv64(str.data(), str.size());
         }
 
-        static constexpr uint64_t CreateFnv64(const char *data,
+        static constexpr uint64_t CreateFnv64(const char* data,
                                               size_t length) noexcept {
             uint64_t hash64 = InternalFnv64(data, length);
             hash64 = (hash64 & 0x1FFFFFFFFFFFFFFFULL) | 0xA000000000000000ULL;

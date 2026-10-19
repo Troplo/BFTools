@@ -16,18 +16,18 @@
 #include <zlib.h>
 
 namespace Nomad::Archives {
-    static uint32_t ReadU32BE(const uint8_t *p) {
+    static uint32_t ReadU32BE(const uint8_t* p) {
         return (static_cast<uint32_t>(p[0]) << 24) |
                (static_cast<uint32_t>(p[1]) << 16) |
                (static_cast<uint32_t>(p[2]) << 8) | static_cast<uint32_t>(p[3]);
     }
 
-    static uint64_t ReadU64BE(const uint8_t *p) {
+    static uint64_t ReadU64BE(const uint8_t* p) {
         return (static_cast<uint64_t>(ReadU32BE(p)) << 32) | ReadU32BE(p + 4);
     }
 
 #if __DEBUG
-    static std::string HexDump(const uint8_t *data, size_t size) {
+    static std::string HexDump(const uint8_t* data, size_t size) {
         std::ostringstream oss;
         size_t len = std::min<size_t>(size, 16);
         for (size_t i = 0; i < len; ++i) {
@@ -37,9 +37,9 @@ namespace Nomad::Archives {
     }
 #endif
 
-    static bool DecompressXMemCompress(const uint8_t *srcBuf, size_t srcLen,
-                                       uint8_t *dstBuf, size_t dstLen,
-                                       std::string &errorMsg) {
+    static bool DecompressXMemCompress(const uint8_t* srcBuf, size_t srcLen,
+                                       uint8_t* dstBuf, size_t dstLen,
+                                       std::string& errorMsg) {
         if (!srcBuf || !dstBuf) {
             errorMsg = "XMemCompress: null buffer pointer provided";
             return false;
@@ -84,7 +84,7 @@ namespace Nomad::Archives {
             }
         }
 
-        struct lzx_state *strm = lzx_init(windowBits);
+        struct lzx_state* strm = lzx_init(windowBits);
         if (!strm) {
             errorMsg = std::format("XMemCompress: failed to initialize LZX "
                                    "decoder with window bits {}",
@@ -120,7 +120,7 @@ namespace Nomad::Archives {
                 return false;
             }
 
-            const uint8_t *chunkBuf = srcBuf + srcPos;
+            const uint8_t* chunkBuf = srcBuf + srcPos;
             srcPos += compressedChunkSize;
 
             uint32_t blockDstSize = 0;
@@ -166,7 +166,7 @@ namespace Nomad::Archives {
                 blockDstSize = static_cast<uint32_t>(dstLen - dstPos);
             }
 
-            const uint8_t *blockData = chunkBuf + blockHeaderLen;
+            const uint8_t* blockData = chunkBuf + blockHeaderLen;
             size_t actualBlockDataLen = blockSrcSize;
             if (blockHeaderLen + actualBlockDataLen > compressedChunkSize) {
                 errorMsg = std::format("[Chunk {}] Invalid block size (header "
@@ -179,7 +179,7 @@ namespace Nomad::Archives {
 
             lzx_reset(strm);
             int lzxRes = lzx_decompress(
-                strm, const_cast<unsigned char *>(blockData), dstBuf + dstPos,
+                strm, const_cast<unsigned char*>(blockData), dstBuf + dstPos,
                 actualBlockDataLen, blockDstSize);
 
             if (lzxRes != 0) {
@@ -219,9 +219,9 @@ namespace Nomad::Archives {
         return true;
     }
 
-    static bool DecompressLZO1x(const uint8_t *src, size_t srcSize,
-                                uint8_t *dst, size_t dstSize,
-                                std::string &errorMsg) {
+    static bool DecompressLZO1x(const uint8_t* src, size_t srcSize,
+                                uint8_t* dst, size_t dstSize,
+                                std::string& errorMsg) {
         static bool lzoInitialized = false;
         if (!lzoInitialized) {
             if (lzo_init() != LZO_E_OK) {
@@ -248,8 +248,8 @@ namespace Nomad::Archives {
         return true;
     }
 
-    static bool DecompressZlib(const uint8_t *src, size_t srcSize, uint8_t *dst,
-                               size_t dstSize, std::string &errorMsg) {
+    static bool DecompressZlib(const uint8_t* src, size_t srcSize, uint8_t* dst,
+                               size_t dstSize, std::string& errorMsg) {
         if (srcSize < 16) {
             errorMsg = "Zlib: compressed payload too small (< 16 bytes header)";
             return false;
@@ -301,7 +301,7 @@ namespace Nomad::Archives {
                 }
 
                 z_stream strm{};
-                strm.next_in = const_cast<Bytef *>(src + srcPos);
+                strm.next_in = const_cast<Bytef*>(src + srcPos);
                 strm.avail_in = compressedBlockSize;
                 strm.next_out = dst + dstPos;
                 strm.avail_out = uncompressedBlockSize;
@@ -335,8 +335,8 @@ namespace Nomad::Archives {
         return dstPos == dstSize;
     }
 
-    static size_t ParseVarintHeaderOffset(const uint8_t *src, size_t srcSize,
-                                          uint32_t &outCompSize) {
+    static size_t ParseVarintHeaderOffset(const uint8_t* src, size_t srcSize,
+                                          uint32_t& outCompSize) {
         if (srcSize == 0)
             return 0;
         uint32_t v7 = src[0];
@@ -368,9 +368,9 @@ namespace Nomad::Archives {
         }
     }
 
-    static bool DecompressLZ4LW(const uint8_t *src, size_t srcSize,
-                                uint8_t *dst, size_t dstSize,
-                                std::string &errorMsg) {
+    static bool DecompressLZ4LW(const uint8_t* src, size_t srcSize,
+                                uint8_t* dst, size_t dstSize,
+                                std::string& errorMsg) {
         if (!src || !dst || srcSize < 2) {
             errorMsg = "LZ4LW: invalid buffer or size";
             return false;
@@ -383,10 +383,10 @@ namespace Nomad::Archives {
             return false;
         }
 
-        const uint8_t *ip = src + headerLen;
-        const uint8_t *const iend = src + srcSize;
-        uint8_t *op = dst;
-        uint8_t *const oend = dst + dstSize;
+        const uint8_t* ip = src + headerLen;
+        const uint8_t* const iend = src + srcSize;
+        uint8_t* op = dst;
+        uint8_t* const oend = dst + dstSize;
 
         const size_t inputShift =
             (dstSize >= srcSize) ? (dstSize - srcSize) : 0;
@@ -483,7 +483,7 @@ namespace Nomad::Archives {
                 return false;
             }
 
-            const uint8_t *matchPtr = op - offset;
+            const uint8_t* matchPtr = op - offset;
             for (size_t i = 0; i < matchLen; ++i) {
                 *op++ = *matchPtr++;
             }
@@ -511,20 +511,20 @@ namespace Nomad::Archives {
         return true;
     }
 
-    static void *SzAlloc(void *p, size_t size) {
+    static void* SzAlloc(void* p, size_t size) {
         (void)p;
         return std::malloc(size);
     }
 
-    static void SzFree(void *p, void *address) {
+    static void SzFree(void* p, void* address) {
         (void)p;
         std::free(address);
     }
 
     static ISzAlloc g_LzmaAlloc = {SzAlloc, SzFree};
 
-    static bool DecompressLZMA(const uint8_t *src, size_t srcSize, uint8_t *dst,
-                               size_t dstSize, std::string &errorMsg) {
+    static bool DecompressLZMA(const uint8_t* src, size_t srcSize, uint8_t* dst,
+                               size_t dstSize, std::string& errorMsg) {
         if (!src || !dst) {
             errorMsg = "LZMA: null buffer pointer provided";
             return false;
@@ -556,8 +556,8 @@ namespace Nomad::Archives {
             return false;
         }
 
-        const uint8_t *lzmaProps = src + varintLen;
-        const uint8_t *lzmaPayload = src + varintLen + 5;
+        const uint8_t* lzmaProps = src + varintLen;
+        const uint8_t* lzmaPayload = src + varintLen + 5;
         SizeT realPayloadLen = srcSize - varintLen - 5 - varintVal;
         SizeT outSize = dstSize - varintVal;
 
@@ -587,9 +587,9 @@ namespace Nomad::Archives {
         return true;
     }
 
-    bool Compression::Decompress(CompressionScheme scheme, const uint8_t *src,
-                                 size_t srcSize, uint8_t *dst, size_t dstSize,
-                                 std::string &errorMsg) {
+    bool Compression::Decompress(CompressionScheme scheme, const uint8_t* src,
+                                 size_t srcSize, uint8_t* dst, size_t dstSize,
+                                 std::string& errorMsg) {
         errorMsg.clear();
         switch (scheme) {
         case CompressionScheme::None:
@@ -626,18 +626,18 @@ namespace Nomad::Archives {
     }
 
     bool Compression::Decompress(CompressionScheme scheme,
-                                 const std::vector<uint8_t> &compressedData,
-                                 std::vector<uint8_t> &uncompressedData,
+                                 const std::vector<uint8_t>& compressedData,
+                                 std::vector<uint8_t>& uncompressedData,
                                  size_t uncompressedSize,
-                                 std::string &errorMsg) {
+                                 std::string& errorMsg) {
         uncompressedData.resize(uncompressedSize);
         return Decompress(scheme, compressedData.data(), compressedData.size(),
                           uncompressedData.data(), uncompressedSize, errorMsg);
     }
 
-    static bool CompressLZ4LW(const uint8_t *src, size_t srcSize,
-                              std::vector<uint8_t> &dst,
-                              std::string &errorMsg) {
+    static bool CompressLZ4LW(const uint8_t* src, size_t srcSize,
+                              std::vector<uint8_t>& dst,
+                              std::string& errorMsg) {
         if (srcSize <= 31) {
             errorMsg = "LZ4LW: file size <= 31 bytes, compression skipped";
             return false;
@@ -651,7 +651,7 @@ namespace Nomad::Archives {
         constexpr size_t HASH_SIZE = 1 << HASH_LOG;
         std::vector<int32_t> hashTable(HASH_SIZE, -1);
 
-        auto Hash4 = [](const uint8_t *p) -> uint32_t {
+        auto Hash4 = [](const uint8_t* p) -> uint32_t {
             uint32_t val = static_cast<uint32_t>(p[0]) |
                            (static_cast<uint32_t>(p[1]) << 8) |
                            (static_cast<uint32_t>(p[2]) << 16) |
@@ -659,10 +659,10 @@ namespace Nomad::Archives {
             return (val * 2654435761U) >> (32 - HASH_LOG);
         };
 
-        const uint8_t *ip = src;
-        const uint8_t *anchor = src;
-        const uint8_t *const iend = src + srcSize;
-        const uint8_t *const mflimit = iend - 5;
+        const uint8_t* ip = src;
+        const uint8_t* anchor = src;
+        const uint8_t* const iend = src + srcSize;
+        const uint8_t* const mflimit = iend - 5;
 
         while (ip < mflimit) {
             uint32_t h = Hash4(ip);
@@ -672,7 +672,7 @@ namespace Nomad::Archives {
             if (refPos >= 0) {
                 uint32_t offset = static_cast<uint32_t>((ip - src) - refPos);
                 if (offset > 0 && offset <= MAX_OFFSET) {
-                    const uint8_t *ref = src + refPos;
+                    const uint8_t* ref = src + refPos;
                     if (ref[0] == ip[0] && ref[1] == ip[1] && ref[2] == ip[2] &&
                         ref[3] == ip[3]) {
                         size_t matchLen = 4;
@@ -741,9 +741,9 @@ namespace Nomad::Archives {
         return true;
     }
 
-    static bool CompressLZO1x(const uint8_t *src, size_t srcSize,
-                              std::vector<uint8_t> &dst,
-                              std::string &errorMsg) {
+    static bool CompressLZO1x(const uint8_t* src, size_t srcSize,
+                              std::vector<uint8_t>& dst,
+                              std::string& errorMsg) {
         if (srcSize <= 31) {
             errorMsg = "LZO1x: file size <= 31 bytes, compression skipped";
             return false;
@@ -772,26 +772,26 @@ namespace Nomad::Archives {
         return true;
     }
 
-    static void PutWordLE(std::vector<uint8_t> &buf, uint16_t w) {
+    static void PutWordLE(std::vector<uint8_t>& buf, uint16_t w) {
         buf.push_back(static_cast<uint8_t>(w & 0xFF));
         buf.push_back(static_cast<uint8_t>((w >> 8) & 0xFF));
     }
 
-    static void PutU32BE(std::vector<uint8_t> &buf, uint32_t val) {
+    static void PutU32BE(std::vector<uint8_t>& buf, uint32_t val) {
         buf.push_back(static_cast<uint8_t>((val >> 24) & 0xFF));
         buf.push_back(static_cast<uint8_t>((val >> 16) & 0xFF));
         buf.push_back(static_cast<uint8_t>((val >> 8) & 0xFF));
         buf.push_back(static_cast<uint8_t>(val & 0xFF));
     }
 
-    static void PutU64BE(std::vector<uint8_t> &buf, uint64_t val) {
+    static void PutU64BE(std::vector<uint8_t>& buf, uint64_t val) {
         PutU32BE(buf, static_cast<uint32_t>(val >> 32));
         PutU32BE(buf, static_cast<uint32_t>(val & 0xFFFFFFFF));
     }
 
-    static bool CompressXMemCompress(const uint8_t *src, size_t srcSize,
-                                     std::vector<uint8_t> &dst,
-                                     std::string &errorMsg) {
+    static bool CompressXMemCompress(const uint8_t* src, size_t srcSize,
+                                     std::vector<uint8_t>& dst,
+                                     std::string& errorMsg) {
         if (srcSize <= 31) {
             errorMsg =
                 "XMemCompress: file size <= 31 bytes, compression skipped";
@@ -801,7 +801,7 @@ namespace Nomad::Archives {
         constexpr size_t CHUNK_SIZE = 32768; // 32KB
         dst.clear();
 
-        void *compressor = nullptr;
+        void* compressor = nullptr;
         if (lzx_compressor_ops.create_compressor(CHUNK_SIZE, 50, false,
                                                  &compressor) != 0) {
             errorMsg = "XMemCompress: failed to create LZX compressor";
@@ -880,10 +880,10 @@ namespace Nomad::Archives {
         return true;
     }
 
-    bool Compression::Compress(CompressionScheme scheme, const uint8_t *src,
+    bool Compression::Compress(CompressionScheme scheme, const uint8_t* src,
                                size_t srcSize,
-                               std::vector<uint8_t> &compressedData,
-                               std::string &errorMsg) {
+                               std::vector<uint8_t>& compressedData,
+                               std::string& errorMsg) {
         errorMsg.clear();
         if (srcSize <= 31) {
             compressedData.assign(src, src + srcSize);

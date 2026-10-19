@@ -27,10 +27,10 @@ namespace Nomad::Archives {
         ProjectConfig() = default;
         explicit ProjectConfig(std::string name);
 
-        [[nodiscard]] const std::string &GetName() const { return m_name; }
+        [[nodiscard]] const std::string& GetName() const { return m_name; }
         void SetName(std::string name) { m_name = std::move(name); }
 
-        [[nodiscard]] const std::filesystem::path &GetProjectPath() const {
+        [[nodiscard]] const std::filesystem::path& GetProjectPath() const {
             return m_projectPath;
         }
         void SetProjectPath(std::filesystem::path path) {
@@ -51,14 +51,14 @@ namespace Nomad::Archives {
             m_rawVersion = rawVersion;
         }
 
-        [[nodiscard]] const std::unordered_map<uint64_t, std::string> &
+        [[nodiscard]] const std::unordered_map<uint64_t, std::string>&
         GetOverrides() const {
             return m_hashToPath;
         }
         void AddOverride(uint64_t hash, std::string_view path);
         void RemoveOverride(uint64_t hash);
 
-        [[nodiscard]] const std::vector<std::string_view> &
+        [[nodiscard]] const std::vector<std::string_view>&
         GetFilelistLines() const {
             return m_filelistLines;
         }
@@ -76,11 +76,11 @@ namespace Nomad::Archives {
         [[nodiscard]] std::optional<uint64_t>
         FindHashByPath(std::string_view path) const;
 
-        bool LoadFilelist(const std::filesystem::path &filelistPath);
-        bool LoadFromDirectory(const std::filesystem::path &projectDir);
-        bool LoadConfigFile(const std::filesystem::path &jsonPath);
+        bool LoadFilelist(const std::filesystem::path& filelistPath);
+        bool LoadFromDirectory(const std::filesystem::path& projectDir);
+        bool LoadConfigFile(const std::filesystem::path& jsonPath);
         bool LoadConfigJson(std::string_view jsonContent);
-        bool SaveConfigFile(const std::filesystem::path &jsonPath) const;
+        bool SaveConfigFile(const std::filesystem::path& jsonPath) const;
 
         static std::optional<uint64_t> ParseHashString(std::string_view str);
 

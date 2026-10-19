@@ -22,7 +22,7 @@ namespace std {
 
 class BFToolsError : public std::error_category {
   public:
-    const char *name() const noexcept override { return "BFTools"; }
+    const char* name() const noexcept override { return "BFTools"; }
 
     [[nodiscard]] std::string message(int ev) const override {
         switch (static_cast<ErrorCodes>(ev)) {
@@ -44,7 +44,7 @@ class BFToolsError : public std::error_category {
     }
 };
 
-inline const BFToolsError &bftools_error() {
+inline const BFToolsError& bftools_error() {
     static BFToolsError instance;
     return instance;
 }

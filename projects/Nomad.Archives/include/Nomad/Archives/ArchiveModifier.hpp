@@ -20,31 +20,31 @@ namespace Nomad::Archives {
 
     class ArchiveModifier {
       public:
-        static bool AppendFile(const std::filesystem::path &fatPath,
-                               IArchive &archive,
-                               const std::string &archiveRelPath,
-                               const std::filesystem::path &sourceFilePath,
-                               CompressionScheme scheme, std::string &errorMsg);
+        static bool AppendFile(const std::filesystem::path& fatPath,
+                               IArchive& archive,
+                               const std::string& archiveRelPath,
+                               const std::filesystem::path& sourceFilePath,
+                               CompressionScheme scheme, std::string& errorMsg);
 
         static bool
-        AppendFiles(const std::filesystem::path &fatPath, IArchive &archive,
-                    const std::vector<FileToAdd> &files,
-                    CompressionScheme scheme, std::string &errorMsg,
-                    const std::function<void(size_t current, size_t total)>
-                        &progressCallback = nullptr);
+        AppendFiles(const std::filesystem::path& fatPath, IArchive& archive,
+                    const std::vector<FileToAdd>& files,
+                    CompressionScheme scheme, std::string& errorMsg,
+                    const std::function<void(size_t current, size_t total)>&
+                        progressCallback = nullptr);
 
         static bool
-        MergeArchive(const std::filesystem::path &targetFatPath,
-                     IArchive &targetArchive,
-                     const std::filesystem::path &sourceFatPath,
-                     const IArchive &sourceArchive, size_t &outMergedCount,
-                     std::string &errorMsg,
-                     const std::function<void(size_t current, size_t total)>
-                         &progressCallback = nullptr);
+        MergeArchive(const std::filesystem::path& targetFatPath,
+                     IArchive& targetArchive,
+                     const std::filesystem::path& sourceFatPath,
+                     const IArchive& sourceArchive, size_t& outMergedCount,
+                     std::string& errorMsg,
+                     const std::function<void(size_t current, size_t total)>&
+                         progressCallback = nullptr);
 
-        static bool SaveMetadata(const std::filesystem::path &fatPath,
-                                 const IArchive &archive,
-                                 std::string &errorMsg);
+        static bool SaveMetadata(const std::filesystem::path& fatPath,
+                                 const IArchive& archive,
+                                 std::string& errorMsg);
     };
 
 } // namespace Nomad::Archives

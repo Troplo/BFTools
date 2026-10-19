@@ -25,17 +25,17 @@ namespace Nomad::Archives {
     class Defragmenter {
       public:
         static DefragStats
-        Analyze(const std::filesystem::path &fatPath, const IArchive &archive,
+        Analyze(const std::filesystem::path& fatPath, const IArchive& archive,
                 CompressionScheme targetScheme = CompressionScheme::Unknown);
 
         static bool Defragment(
-            const std::filesystem::path &fatPath, IArchive &archive,
-            std::string &errorMsg,
+            const std::filesystem::path& fatPath, IArchive& archive,
+            std::string& errorMsg,
             std::function<void(size_t current, size_t total)> progressCallback =
                 nullptr,
             CompressionScheme targetScheme = CompressionScheme::Unknown,
             size_t numThreads = 0,
-            const std::atomic<bool> *cancelFlag = nullptr);
+            const std::atomic<bool>* cancelFlag = nullptr);
     };
 
 } // namespace Nomad::Archives

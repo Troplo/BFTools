@@ -6,13 +6,13 @@
 #include <QVBoxLayout>
 
 namespace BFView::Dialogs {
-    ExtractProgressDialog::ExtractProgressDialog(QWidget *parent)
+    ExtractProgressDialog::ExtractProgressDialog(QWidget* parent)
         : QDialog(parent) {
         setWindowTitle("Extracting Archive Items...");
         setModal(true);
         setFixedSize(500, 160);
 
-        auto *layout = new QVBoxLayout(this);
+        auto* layout = new QVBoxLayout(this);
         layout->setContentsMargins(16, 16, 16, 16);
         layout->setSpacing(10);
 
@@ -36,7 +36,7 @@ namespace BFView::Dialogs {
     }
 
     void ExtractProgressDialog::SetStatus(int current, int total,
-                                          const QString &currentFile) {
+                                          const QString& currentFile) {
         if (total > 0) {
             int percent = static_cast<int>(
                 (static_cast<double>(current) / total) * 100.0);

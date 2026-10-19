@@ -14,13 +14,13 @@ namespace Nomad::Archives {
         size_t operator()(std::string_view sv) const noexcept {
             return std::hash<std::string_view>{}(sv);
         }
-        size_t operator()(const std::string &s) const noexcept {
+        size_t operator()(const std::string& s) const noexcept {
             return std::hash<std::string_view>{}(s);
         }
     };
 
     std::shared_ptr<ArchiveNode>
-    DirectoryTreeBuilder::Build(const std::vector<ArchiveEntry> &entries) {
+    DirectoryTreeBuilder::Build(const std::vector<ArchiveEntry>& entries) {
         ZoneScopedN("DirectoryTreeBuilder::Build");
         auto root = std::make_shared<ArchiveNode>();
         root->name = "/";
@@ -28,7 +28,7 @@ namespace Nomad::Archives {
         root->isDirectory = true;
         root->rowIndex = 0;
 
-        std::unordered_map<std::string, ArchiveNode *, StringHash,
+        std::unordered_map<std::string, ArchiveNode*, StringHash,
                            std::equal_to<>>
             dirMap;
         dirMap.reserve(std::max<size_t>(64, entries.size() / 4));
@@ -36,7 +36,7 @@ namespace Nomad::Archives {
         dirMap["/"] = root.get();
 
         auto getOrCreateDir = [&](std::string_view dirPath,
-                                  auto &self) -> ArchiveNode * {
+                                  auto& self) -> ArchiveNode* {
             if (dirPath.empty() || dirPath == "/") {
                 return root.get();
             }
@@ -55,7 +55,7 @@ namespace Nomad::Archives {
                 dirName = dirPath.substr(lastSlash + 1);
             }
 
-            ArchiveNode *parentNode = self(parentPath, self);
+            ArchiveNode* parentNode = self(parentPath, self);
 
             auto dirNode = std::make_shared<ArchiveNode>();
             dirNode->name = std::string(dirName);
@@ -67,7 +67,7 @@ namespace Nomad::Archives {
             dirNode->parent = parentNode;
             dirNode->rowIndex = parentNode->children.size();
 
-            ArchiveNode *rawDir = dirNode.get();
+            ArchiveNode* rawDir = dirNode.get();
             parentNode->children.push_back(std::move(dirNode));
             std::string dirPathStr(dirPath);
             dirMap[dirPathStr] = rawDir;
@@ -77,7 +77,7 @@ namespace Nomad::Archives {
             return rawDir;
         };
 
-        for (const auto &entry : entries) {
+        for (const auto& entry : entries) {
             if (entry.path.empty())
                 continue;
 
@@ -92,7 +92,7 @@ namespace Nomad::Archives {
                 fileName = std::string_view(entry.path).substr(lastSlash + 1);
             }
 
-            ArchiveNode *parentNode = nullptr;
+            ArchiveNode* parentNode = nullptr;
             if (dirPath.empty() || dirPath == "/") {
                 parentNode = root.get();
             } else {

@@ -15,14 +15,14 @@
 namespace BFView {
     class FileHandlerManager {
       public:
-        static FileHandlerManager &GetInstance();
+        static FileHandlerManager& GetInstance();
 
         void RegisterHandler(std::unique_ptr<IFileHandler> handler);
-        IFileHandler *FindHandler(const QString &fileName,
-                                  const QByteArray &fileData) const;
+        IFileHandler* FindHandler(const QString& fileName,
+                                  const QByteArray& fileData) const;
 
-        bool OpenFile(const QString &fatPath,
-                      const Nomad::Archives::ArchiveEntry &entry,
+        bool OpenFile(const QString& fatPath,
+                      const Nomad::Archives::ArchiveEntry& entry,
                       bool bypassCustomHandler = false,
                       bool openWithChooser = false);
 

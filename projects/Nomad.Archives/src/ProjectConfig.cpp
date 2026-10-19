@@ -111,12 +111,12 @@ namespace Nomad::Archives {
     void ProjectConfig::SetFilelistLines(std::vector<std::string> lines) {
         ClearFilelists();
         size_t totalLen = 0;
-        for (const auto &l : lines)
+        for (const auto& l : lines)
             totalLen += l.size() + 1;
-        std::string &buf = m_filelistBuffers.emplace_back();
+        std::string& buf = m_filelistBuffers.emplace_back();
         buf.reserve(totalLen);
         m_filelistLines.reserve(lines.size());
-        for (const auto &l : lines) {
+        for (const auto& l : lines) {
             size_t offset = buf.size();
             buf.append(l);
             buf.push_back('\0');
@@ -128,12 +128,12 @@ namespace Nomad::Archives {
     void ProjectConfig::SetFilelistLines(std::vector<std::string_view> lines) {
         ClearFilelists();
         size_t totalLen = 0;
-        for (const auto &l : lines)
+        for (const auto& l : lines)
             totalLen += l.size() + 1;
-        std::string &buf = m_filelistBuffers.emplace_back();
+        std::string& buf = m_filelistBuffers.emplace_back();
         buf.reserve(totalLen);
         m_filelistLines.reserve(lines.size());
-        for (const auto &l : lines) {
+        for (const auto& l : lines) {
             size_t offset = buf.size();
             buf.append(l);
             buf.push_back('\0');
@@ -183,12 +183,12 @@ namespace Nomad::Archives {
             }));
         }
 
-        for (auto &f : futures) {
+        for (auto& f : futures) {
             f.get();
         }
 
         std::sort(m_indexedFilelist.begin(), m_indexedFilelist.end(),
-                  [](const FilelistIndexEntry &a, const FilelistIndexEntry &b) {
+                  [](const FilelistIndexEntry& a, const FilelistIndexEntry& b) {
                       return a.hash < b.hash;
                   });
 
@@ -204,7 +204,7 @@ namespace Nomad::Archives {
 
         auto it = std::lower_bound(
             m_indexedFilelist.begin(), m_indexedFilelist.end(), hash,
-            [](const FilelistIndexEntry &item, uint64_t targetHash) {
+            [](const FilelistIndexEntry& item, uint64_t targetHash) {
                 return item.hash < targetHash;
             });
 
@@ -214,7 +214,7 @@ namespace Nomad::Archives {
         return std::nullopt;
     }
 
-    bool ProjectConfig::LoadConfigFile(const std::filesystem::path &jsonPath) {
+    bool ProjectConfig::LoadConfigFile(const std::filesystem::path& jsonPath) {
         std::ifstream file(jsonPath);
         if (!file.is_open()) {
             return false;
@@ -278,7 +278,7 @@ namespace Nomad::Archives {
     }
 
     bool
-    ProjectConfig::SaveConfigFile(const std::filesystem::path &jsonPath) const {
+    ProjectConfig::SaveConfigFile(const std::filesystem::path& jsonPath) const {
         try {
             nlohmann::ordered_json j;
             j["name"] = m_name;
@@ -305,7 +305,7 @@ namespace Nomad::Archives {
                 nlohmann::ordered_json::object();
             std::vector<uint64_t> sortedHashes;
             sortedHashes.reserve(m_hashToPath.size());
-            for (const auto &[hash, _] : m_hashToPath) {
+            for (const auto& [hash, _] : m_hashToPath) {
                 sortedHashes.push_back(hash);
             }
             std::sort(sortedHashes.begin(), sortedHashes.end());
@@ -329,9 +329,9 @@ namespace Nomad::Archives {
         }
     }
 
-    static bool LoadGzipFilelist(const std::filesystem::path &path,
-                                 std::deque<std::string> &buffers,
-                                 std::vector<std::string_view> &lines) {
+    static bool LoadGzipFilelist(const std::filesystem::path& path,
+                                 std::deque<std::string>& buffers,
+                                 std::vector<std::string_view>& lines) {
         ZoneScopedN("ProjectConfig::LoadGzipFilelist");
         std::ifstream in(path, std::ios::binary);
         if (!in.is_open())
@@ -344,7 +344,7 @@ namespace Nomad::Archives {
         in.seekg(0, std::ios::beg);
 
         std::vector<uint8_t> compressed(static_cast<size_t>(fileSize));
-        if (!in.read(reinterpret_cast<char *>(compressed.data()), fileSize)) {
+        if (!in.read(reinterpret_cast<char*>(compressed.data()), fileSize)) {
             return false;
         }
 
@@ -353,7 +353,7 @@ namespace Nomad::Archives {
             return false;
         }
 
-        std::string &buffer = buffers.emplace_back();
+        std::string& buffer = buffers.emplace_back();
         buffer.resize(32 * 1024 * 1024);
         size_t inOffset = 0;
         size_t totalProduced = 0;
@@ -373,7 +373,7 @@ namespace Nomad::Archives {
             }
 
             strm.next_out =
-                reinterpret_cast<Bytef *>(buffer.data() + totalProduced);
+                reinterpret_cast<Bytef*>(buffer.data() + totalProduced);
             strm.avail_out = static_cast<uInt>(buffer.size() - totalProduced);
 
             int ret = inflate(&strm, Z_NO_FLUSH);
@@ -398,7 +398,7 @@ namespace Nomad::Archives {
         buffer.resize(totalProduced);
         buffer.shrink_to_fit();
 
-        const char *data = buffer.data();
+        const char* data = buffer.data();
         size_t lineCount = 0;
         for (size_t i = 0; i < totalProduced; ++i) {
             if (data[i] == '\n')
@@ -428,9 +428,9 @@ namespace Nomad::Archives {
         return true;
     }
 
-    static bool LoadPlainFilelist(const std::filesystem::path &path,
-                                  std::deque<std::string> &buffers,
-                                  std::vector<std::string_view> &lines) {
+    static bool LoadPlainFilelist(const std::filesystem::path& path,
+                                  std::deque<std::string>& buffers,
+                                  std::vector<std::string_view>& lines) {
         ZoneScopedN("ProjectConfig::LoadPlainFilelist");
         std::ifstream fl(path, std::ios::binary);
         if (!fl.is_open())
@@ -441,14 +441,14 @@ namespace Nomad::Archives {
             return false;
         fl.seekg(0, std::ios::beg);
 
-        std::string &buffer = buffers.emplace_back();
+        std::string& buffer = buffers.emplace_back();
         buffer.resize(static_cast<size_t>(fileSize));
         if (!fl.read(buffer.data(), fileSize)) {
             buffers.pop_back();
             return false;
         }
 
-        const char *data = buffer.data();
+        const char* data = buffer.data();
         size_t totalBytes = static_cast<size_t>(fileSize);
         size_t lineCount = 0;
         for (size_t i = 0; i < totalBytes; ++i) {
@@ -479,7 +479,7 @@ namespace Nomad::Archives {
     }
 
     bool
-    ProjectConfig::LoadFilelist(const std::filesystem::path &filelistPath) {
+    ProjectConfig::LoadFilelist(const std::filesystem::path& filelistPath) {
         ZoneScopedN("ProjectConfig::LoadFilelist");
         ClearFilelists();
         std::string ext = filelistPath.extension().string();
@@ -495,7 +495,7 @@ namespace Nomad::Archives {
     }
 
     bool
-    ProjectConfig::LoadFromDirectory(const std::filesystem::path &projectDir) {
+    ProjectConfig::LoadFromDirectory(const std::filesystem::path& projectDir) {
         m_projectPath = projectDir;
         bool anyLoaded = false;
 
@@ -521,7 +521,7 @@ namespace Nomad::Archives {
         }
 
         if (!anyLoaded) {
-            for (const auto &entry :
+            for (const auto& entry :
                  std::filesystem::directory_iterator(projectDir)) {
                 if (entry.is_regular_file()) {
                     auto ext = entry.path().extension();

@@ -17,8 +17,8 @@
 #include <vector>
 
 namespace Nomad::Archives {
-    DefragStats Defragmenter::Analyze(const std::filesystem::path &fatPath,
-                                      const IArchive &archive,
+    DefragStats Defragmenter::Analyze(const std::filesystem::path& fatPath,
+                                      const IArchive& archive,
                                       CompressionScheme targetScheme) {
         if (targetScheme == CompressionScheme::Unknown) {
             targetScheme =
@@ -37,7 +37,7 @@ namespace Nomad::Archives {
         }
 
         std::unordered_map<uint64_t, uint64_t> uniqueOffsets;
-        for (const auto &entry : archive.GetEntries()) {
+        for (const auto& entry : archive.GetEntries()) {
             if (!entry.is_directory) {
                 uint64_t sz = entry.compressed_size > 0
                                   ? entry.compressed_size
@@ -51,7 +51,7 @@ namespace Nomad::Archives {
 
         uint64_t activePayload = 0;
         uint64_t estimatedNewDatSize = 0;
-        for (const auto &[off, sz] : uniqueOffsets) {
+        for (const auto& [off, sz] : uniqueOffsets) {
             activePayload += sz;
             estimatedNewDatSize = AlignUp(estimatedNewDatSize, 16ULL);
             estimatedNewDatSize += sz;
@@ -88,11 +88,11 @@ namespace Nomad::Archives {
     }
 
     bool Defragmenter::Defragment(
-        const std::filesystem::path &fatPath, IArchive &archive,
-        std::string &errorMsg,
+        const std::filesystem::path& fatPath, IArchive& archive,
+        std::string& errorMsg,
         std::function<void(size_t current, size_t total)> progressCallback,
         CompressionScheme targetScheme, size_t numThreads,
-        const std::atomic<bool> *cancelFlag) {
+        const std::atomic<bool>* cancelFlag) {
         auto startTime = std::chrono::steady_clock::now();
         errorMsg.clear();
 
@@ -168,11 +168,11 @@ namespace Nomad::Archives {
 
         struct OffsetBlock {
             uint64_t oldOffset{0};
-            const ArchiveEntry *representativeEntry{nullptr};
+            const ArchiveEntry* representativeEntry{nullptr};
         };
 
-        std::unordered_map<uint64_t, const ArchiveEntry *> uniqueBlocks;
-        for (const auto &entry : archive.GetEntries()) {
+        std::unordered_map<uint64_t, const ArchiveEntry*> uniqueBlocks;
+        for (const auto& entry : archive.GetEntries()) {
             if (!entry.is_directory) {
                 if (uniqueBlocks.find(entry.offset) == uniqueBlocks.end()) {
                     uniqueBlocks[entry.offset] = &entry;
@@ -182,12 +182,12 @@ namespace Nomad::Archives {
 
         std::vector<OffsetBlock> blocks;
         blocks.reserve(uniqueBlocks.size());
-        for (const auto &[off, entryPtr] : uniqueBlocks) {
+        for (const auto& [off, entryPtr] : uniqueBlocks) {
             blocks.push_back({off, entryPtr});
         }
 
         std::sort(blocks.begin(), blocks.end(),
-                  [](const auto &a, const auto &b) {
+                  [](const auto& a, const auto& b) {
                       return a.oldOffset < b.oldOffset;
                   });
 
@@ -231,7 +231,7 @@ namespace Nomad::Archives {
         struct ArchiveDefragEntry {
             size_t blockIdx{0};
             uint64_t oldOffset{0};
-            const ArchiveEntry *representativeEntry{nullptr};
+            const ArchiveEntry* representativeEntry{nullptr};
             uint64_t compSize{0};
             uint64_t uncompSize{0};
             std::vector<uint8_t> rawBuffer;
@@ -263,8 +263,8 @@ namespace Nomad::Archives {
 
             for (size_t b = 0; b < batchCount; ++b) {
                 size_t idx = batchStart + b;
-                const auto &block = blocks[idx];
-                const ArchiveEntry &refEntry = *block.representativeEntry;
+                const auto& block = blocks[idx];
+                const ArchiveEntry& refEntry = *block.representativeEntry;
 
                 uint64_t compSize = refEntry.compressed_size > 0
                                         ? refEntry.compressed_size
@@ -283,7 +283,7 @@ namespace Nomad::Archives {
                 oldDat.seekg(block.oldOffset, std::ios::beg);
                 if (compSize > 0) {
                     item.rawBuffer.resize(compSize);
-                    oldDat.read(reinterpret_cast<char *>(item.rawBuffer.data()),
+                    oldDat.read(reinterpret_cast<char*>(item.rawBuffer.data()),
                                 compSize);
                     if (static_cast<uint64_t>(oldDat.gcount()) != compSize) {
                         item.readError = true;
@@ -292,7 +292,7 @@ namespace Nomad::Archives {
                 batchItems.push_back(std::move(item));
             }
 
-            for (const auto &item : batchItems) {
+            for (const auto& item : batchItems) {
                 if (item.readError) {
                     errorMsg = std::format(
                         "Failed reading stream data (expected {} bytes, "
@@ -307,7 +307,7 @@ namespace Nomad::Archives {
             std::vector<std::future<ProcessedBlock>> futures;
             futures.reserve(batchCount);
 
-            for (auto &item : batchItems) {
+            for (auto& item : batchItems) {
                 futures.push_back(pool.Enqueue([item = std::move(item),
                                                 targetScheme, cancelFlag]()
                                                    -> ProcessedBlock {
@@ -320,7 +320,7 @@ namespace Nomad::Archives {
                         return res;
                     }
 
-                    const ArchiveEntry &refEntry = *item.representativeEntry;
+                    const ArchiveEntry& refEntry = *item.representativeEntry;
                     std::vector<uint8_t> uncompressedData;
                     uint64_t uncompSize = item.uncompSize;
 
@@ -403,7 +403,7 @@ namespace Nomad::Archives {
                 }
 
                 if (!res.payloadToWrite.empty()) {
-                    newDat.write(reinterpret_cast<const char *>(
+                    newDat.write(reinterpret_cast<const char*>(
                                      res.payloadToWrite.data()),
                                  res.payloadToWrite.size());
                 }
@@ -437,8 +437,8 @@ namespace Nomad::Archives {
         oldDat.close();
 
         bool hasNonZeroBlocks = false;
-        for (const auto &block : blocks) {
-            const ArchiveEntry &ref = *block.representativeEntry;
+        for (const auto& block : blocks) {
+            const ArchiveEntry& ref = *block.representativeEntry;
             if (ref.compressed_size > 0 || ref.uncompressed_size > 0) {
                 hasNonZeroBlocks = true;
                 break;
@@ -460,7 +460,7 @@ namespace Nomad::Archives {
                      writtenBytes);
 
         // Update all entries in archive
-        for (auto &entry : archive.GetEntries()) {
+        for (auto& entry : archive.GetEntries()) {
             if (!entry.is_directory) {
                 auto it = offsetMap.find(entry.offset);
                 if (it != offsetMap.end()) {
@@ -511,7 +511,7 @@ namespace Nomad::Archives {
                              "Generated/refreshed NFO file '{}'",
                              realNfo.string());
             }
-        } catch (const std::filesystem::filesystem_error &fe) {
+        } catch (const std::filesystem::filesystem_error& fe) {
             errorMsg =
                 std::string(
                     "Filesystem error replacing original archive files: ") +

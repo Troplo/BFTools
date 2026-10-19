@@ -12,7 +12,7 @@
 namespace BFView {
     class SettingsManager {
       public:
-        static SettingsManager &GetInstance();
+        static SettingsManager& GetInstance();
 
         static inline const QString ALWAYS_ASK = "ALWAYS_ASK";
         static inline const QString NONE_PROJECT = "NONE";
@@ -30,12 +30,12 @@ namespace BFView {
         void SetUseCustomHandlers(bool enable) { m_useCustomHandlers = enable; }
 
         QString GetTempExtractPath() const { return m_tempExtractPath; }
-        void SetTempExtractPath(const QString &path) {
+        void SetTempExtractPath(const QString& path) {
             m_tempExtractPath = path;
         }
 
         QString GetDefaultExtractPath() const { return m_defaultExtractPath; }
-        void SetDefaultExtractPath(const QString &path) {
+        void SetDefaultExtractPath(const QString& path) {
             m_defaultExtractPath = path;
         }
 
@@ -43,14 +43,14 @@ namespace BFView {
         QString GetCustomProjectsDirectory() const {
             return m_projectsDirectory;
         }
-        void SetProjectsDirectory(const QString &dir);
+        void SetProjectsDirectory(const QString& dir);
 
         QString GetDefaultProject(Nomad::Archives::ArchiveVersion version,
                                   uint32_t rawVersion = 0) const;
         void SetDefaultProject(Nomad::Archives::ArchiveVersion version,
-                               const QString &project);
+                               const QString& project);
         void SetDefaultProject(Nomad::Archives::ArchiveVersion version,
-                               uint32_t rawVersion, const QString &project);
+                               uint32_t rawVersion, const QString& project);
 
         Nomad::Archives::CompressionScheme
         GetDefaultCompression(Nomad::Archives::ArchiveVersion version,
@@ -62,7 +62,7 @@ namespace BFView {
                                    Nomad::Archives::CompressionScheme scheme);
 
         QString GetAppTheme() const { return m_appTheme; }
-        void SetAppTheme(const QString &theme) { m_appTheme = theme; }
+        void SetAppTheme(const QString& theme) { m_appTheme = theme; }
 
         bool GetCheckAssociationOnLaunch() const {
             return m_checkAssociationOnLaunch;
@@ -85,8 +85,8 @@ namespace BFView {
         SettingsManager();
         ~SettingsManager() = default;
 
-        SettingsManager(const SettingsManager &) = delete;
-        SettingsManager &operator=(const SettingsManager &) = delete;
+        SettingsManager(const SettingsManager&) = delete;
+        SettingsManager& operator=(const SettingsManager&) = delete;
 
         QString GetSettingsFilePath() const;
 

@@ -13,19 +13,19 @@
 namespace Nomad::Archives {
     class Compression {
       public:
-        static bool Decompress(CompressionScheme scheme, const uint8_t *src,
-                               size_t srcSize, uint8_t *dst, size_t dstSize,
-                               std::string &errorMsg);
+        static bool Decompress(CompressionScheme scheme, const uint8_t* src,
+                               size_t srcSize, uint8_t* dst, size_t dstSize,
+                               std::string& errorMsg);
 
         static bool Decompress(CompressionScheme scheme,
-                               const std::vector<uint8_t> &compressedData,
-                               std::vector<uint8_t> &uncompressedData,
-                               size_t uncompressedSize, std::string &errorMsg);
+                               const std::vector<uint8_t>& compressedData,
+                               std::vector<uint8_t>& uncompressedData,
+                               size_t uncompressedSize, std::string& errorMsg);
 
-        static bool Compress(CompressionScheme scheme, const uint8_t *src,
+        static bool Compress(CompressionScheme scheme, const uint8_t* src,
                              size_t srcSize,
-                             std::vector<uint8_t> &compressedData,
-                             std::string &errorMsg);
+                             std::vector<uint8_t>& compressedData,
+                             std::string& errorMsg);
     };
 
 } // namespace Nomad::Archives

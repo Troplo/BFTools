@@ -33,7 +33,7 @@
 #endif
 
 // Determine allocation size of an allocated block
-static inline size_t QueryAllocSize(void *ptr) {
+static inline size_t QueryAllocSize(void* ptr) {
     if (!ptr)
         return 0;
 #if defined(_WIN32)
@@ -48,22 +48,22 @@ static inline size_t QueryAllocSize(void *ptr) {
 
 extern "C" {
 #if defined(__GNUC__) || defined(__clang__)
-__attribute__((weak)) void *__real_malloc(size_t size);
-__attribute__((weak)) void __real_free(void *ptr);
-__attribute__((weak)) void *__real_calloc(size_t count, size_t size);
-__attribute__((weak)) void *__real_realloc(void *ptr, size_t size);
+__attribute__((weak)) void* __real_malloc(size_t size);
+__attribute__((weak)) void __real_free(void* ptr);
+__attribute__((weak)) void* __real_calloc(size_t count, size_t size);
+__attribute__((weak)) void* __real_realloc(void* ptr, size_t size);
 #else
-void *__real_malloc(size_t size);
-void __real_free(void *ptr);
-void *__real_calloc(size_t count, size_t size);
-void *__real_realloc(void *ptr, size_t size);
+void* __real_malloc(size_t size);
+void __real_free(void* ptr);
+void* __real_calloc(size_t count, size_t size);
+void* __real_realloc(void* ptr, size_t size);
 #endif
 
 namespace InternalMemAlloc {
-    using malloc_fn = void *(*)(size_t);
-    using free_fn = void (*)(void *);
-    using calloc_fn = void *(*)(size_t, size_t);
-    using realloc_fn = void *(*)(void *, size_t);
+    using malloc_fn = void* (*)(size_t);
+    using free_fn = void (*)(void*);
+    using calloc_fn = void* (*)(size_t, size_t);
+    using realloc_fn = void* (*)(void*, size_t);
 
     static malloc_fn real_malloc = nullptr;
     static free_fn real_free = nullptr;
@@ -117,11 +117,11 @@ namespace InternalMemAlloc {
     }
 } // namespace InternalMemAlloc
 
-void *__wrap_malloc(size_t size) {
+void* __wrap_malloc(size_t size) {
     if (!InternalMemAlloc::real_malloc) {
         InternalMemAlloc::ResolveAllocator();
     }
-    void *ptr = InternalMemAlloc::real_malloc(size);
+    void* ptr = InternalMemAlloc::real_malloc(size);
 #if __DEBUG
     if (ptr && !Nexus::MemoryManager::IsInsideAllocator()) {
         Nexus::MemoryManager::SetInsideAllocator(true);
@@ -137,7 +137,7 @@ void *__wrap_malloc(size_t size) {
     return ptr;
 }
 
-void __wrap_free(void *ptr) {
+void __wrap_free(void* ptr) {
     if (!ptr)
         return;
 
@@ -160,11 +160,11 @@ void __wrap_free(void *ptr) {
     InternalMemAlloc::real_free(ptr);
 }
 
-void *__wrap_calloc(size_t count, size_t size) {
+void* __wrap_calloc(size_t count, size_t size) {
     if (!InternalMemAlloc::real_calloc) {
         InternalMemAlloc::ResolveAllocator();
     }
-    void *ptr = InternalMemAlloc::real_calloc(count, size);
+    void* ptr = InternalMemAlloc::real_calloc(count, size);
     size_t total = count * size;
 #if __DEBUG
     if (ptr && !Nexus::MemoryManager::IsInsideAllocator()) {
@@ -181,7 +181,7 @@ void *__wrap_calloc(size_t count, size_t size) {
     return ptr;
 }
 
-void *__wrap_realloc(void *oldPtr, size_t size) {
+void* __wrap_realloc(void* oldPtr, size_t size) {
     if (!InternalMemAlloc::real_realloc) {
         InternalMemAlloc::ResolveAllocator();
     }
@@ -201,7 +201,7 @@ void *__wrap_realloc(void *oldPtr, size_t size) {
     }
 #endif
 
-    void *ptr = InternalMemAlloc::real_realloc(oldPtr, size);
+    void* ptr = InternalMemAlloc::real_realloc(oldPtr, size);
 
 #if __DEBUG
     if (!ptr && size > 0 && oldPtr) {
@@ -233,41 +233,41 @@ void *__wrap_realloc(void *oldPtr, size_t size) {
 }
 }
 
-void *operator new(std::size_t size) {
-    void *ptr = __wrap_malloc(size);
+void* operator new(std::size_t size) {
+    void* ptr = __wrap_malloc(size);
     if (!ptr)
         throw std::bad_alloc();
     return ptr;
 }
 
-void *operator new[](std::size_t size) {
-    void *ptr = __wrap_malloc(size);
+void* operator new[](std::size_t size) {
+    void* ptr = __wrap_malloc(size);
     if (!ptr)
         throw std::bad_alloc();
     return ptr;
 }
 
-void operator delete(void *ptr) noexcept { __wrap_free(ptr); }
+void operator delete(void* ptr) noexcept { __wrap_free(ptr); }
 
-void operator delete[](void *ptr) noexcept { __wrap_free(ptr); }
+void operator delete[](void* ptr) noexcept { __wrap_free(ptr); }
 
-void operator delete(void *ptr, std::size_t) noexcept { __wrap_free(ptr); }
+void operator delete(void* ptr, std::size_t) noexcept { __wrap_free(ptr); }
 
-void operator delete[](void *ptr, std::size_t) noexcept { __wrap_free(ptr); }
+void operator delete[](void* ptr, std::size_t) noexcept { __wrap_free(ptr); }
 
-void *operator new(std::size_t size, const std::nothrow_t &) noexcept {
+void* operator new(std::size_t size, const std::nothrow_t&) noexcept {
     return __wrap_malloc(size);
 }
 
-void *operator new[](std::size_t size, const std::nothrow_t &) noexcept {
+void* operator new[](std::size_t size, const std::nothrow_t&) noexcept {
     return __wrap_malloc(size);
 }
 
-void operator delete(void *ptr, const std::nothrow_t &) noexcept {
+void operator delete(void* ptr, const std::nothrow_t&) noexcept {
     __wrap_free(ptr);
 }
 
-void operator delete[](void *ptr, const std::nothrow_t &) noexcept {
+void operator delete[](void* ptr, const std::nothrow_t&) noexcept {
     __wrap_free(ptr);
 }
 
@@ -289,9 +289,9 @@ namespace Nexus {
             std::memory_order_relaxed);
     }
 
-    void MemoryManager::AddAllocation(AllocationMonitor &monitor, void *ptr,
+    void MemoryManager::AddAllocation(AllocationMonitor& monitor, void* ptr,
                                       size_t size, size_t alignment,
-                                      const std::source_location &location) {
+                                      const std::source_location& location) {
         if (!ptr || !m_ready.load(std::memory_order_relaxed)) {
             return;
         }
@@ -319,8 +319,8 @@ namespace Nexus {
         }
     }
 
-    bool MemoryManager::RemoveAllocation(AllocationMonitor &monitor,
-                                         void *ptr) {
+    bool MemoryManager::RemoveAllocation(AllocationMonitor& monitor,
+                                         void* ptr) {
         if (!ptr || !m_ready.load(std::memory_order_relaxed))
             return false;
 
@@ -347,7 +347,7 @@ namespace Nexus {
 
 #if __DEBUG
     void MemoryManager::DumpReport(std::string_view name) {
-        auto &mon = m_tntMon;
+        auto& mon = m_tntMon;
         uint64_t cur = mon.CurrentBytes.load(std::memory_order_relaxed);
         uint64_t peak = mon.PeakBytes.load(std::memory_order_relaxed);
         uint64_t total = mon.TotalAllocated.load(std::memory_order_relaxed);
@@ -377,7 +377,7 @@ namespace Nexus {
                                       "  Active Allocations: {}", active);
     }
 
-    void MemoryManager::DumpLeaks(AllocationMonitor &monitor,
+    void MemoryManager::DumpLeaks(AllocationMonitor& monitor,
                                   std::string_view name) {
         std::lock_guard lock(monitor.Mutex);
         Nomad::Archives::Logger::Info(
@@ -385,7 +385,7 @@ namespace Nexus {
 
         uint64_t leakedBytes = 0;
         size_t count = 0;
-        for (const auto &[ptr, info] : monitor.Allocations) {
+        for (const auto& [ptr, info] : monitor.Allocations) {
             leakedBytes += info.Size;
             if (count < 50) {
                 Nomad::Archives::Logger::Info(

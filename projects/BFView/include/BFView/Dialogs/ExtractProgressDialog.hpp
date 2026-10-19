@@ -15,17 +15,17 @@ namespace BFView::Dialogs {
         Q_OBJECT
 
       public:
-        explicit ExtractProgressDialog(QWidget *parent = nullptr);
+        explicit ExtractProgressDialog(QWidget* parent = nullptr);
         ~ExtractProgressDialog() override = default;
 
-        void SetStatus(int current, int total, const QString &currentFile);
+        void SetStatus(int current, int total, const QString& currentFile);
         [[nodiscard]] bool IsCancelled() const { return m_isCancelled; }
 
       private:
-        QProgressBar *m_progressBar{nullptr};
-        QLabel *m_lblStatus{nullptr};
-        QLabel *m_lblFile{nullptr};
-        QPushButton *m_btnCancel{nullptr};
+        QProgressBar* m_progressBar{nullptr};
+        QLabel* m_lblStatus{nullptr};
+        QLabel* m_lblFile{nullptr};
+        QPushButton* m_btnCancel{nullptr};
         bool m_isCancelled{false};
     };
 

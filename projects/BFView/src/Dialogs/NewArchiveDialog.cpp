@@ -20,15 +20,15 @@
 namespace BFView::Dialogs {
     static constexpr int RawVersionRole = Qt::UserRole + 1;
 
-    NewArchiveDialog::NewArchiveDialog(QWidget *parent) : QDialog(parent) {
+    NewArchiveDialog::NewArchiveDialog(QWidget* parent) : QDialog(parent) {
         setWindowTitle(tr("Create New BigFile Archive"));
         setMinimumWidth(500);
 
-        auto *mainLayout = new QVBoxLayout(this);
-        auto *formLayout = new QFormLayout();
+        auto* mainLayout = new QVBoxLayout(this);
+        auto* formLayout = new QFormLayout();
 
         // File path row
-        auto *pathLayout = new QHBoxLayout();
+        auto* pathLayout = new QHBoxLayout();
         m_pathEdit = new QLineEdit(this);
         m_pathEdit->setPlaceholderText(tr("Select path for new .fat file..."));
         m_browseButton = new QPushButton(tr("Browse..."), this);
@@ -122,7 +122,7 @@ namespace BFView::Dialogs {
                                 SettingsManager::NONE_PROJECT);
         auto availableProjects = Nomad::Archives::ProjectManager::GetInstance()
                                      .GetAvailableProjects();
-        for (const auto &proj : availableProjects) {
+        for (const auto& proj : availableProjects) {
             QString qProj = QString::fromStdString(proj);
             m_projectCombo->addItem(qProj, qProj);
         }
@@ -131,7 +131,7 @@ namespace BFView::Dialogs {
         mainLayout->addLayout(formLayout);
 
         // Buttons
-        auto *buttonBox = new QDialogButtonBox(
+        auto* buttonBox = new QDialogButtonBox(
             QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
         connect(buttonBox, &QDialogButtonBox::accepted, this,
                 &NewArchiveDialog::OnAccept);

@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 
 namespace BFView::Dialogs {
-    LoadArchiveProgressDialog::LoadArchiveProgressDialog(QWidget *parent)
+    LoadArchiveProgressDialog::LoadArchiveProgressDialog(QWidget* parent)
         : QDialog(parent) {
         setWindowTitle(tr("Opening Archive..."));
         setModal(true);
@@ -15,7 +15,7 @@ namespace BFView::Dialogs {
         setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint |
                        Qt::WindowTitleHint);
 
-        auto *layout = new QVBoxLayout(this);
+        auto* layout = new QVBoxLayout(this);
         layout->setContentsMargins(20, 20, 20, 20);
         layout->setSpacing(10);
 
@@ -35,11 +35,11 @@ namespace BFView::Dialogs {
         layout->addWidget(m_progressBar);
     }
 
-    void LoadArchiveProgressDialog::SetArchiveName(const QString &name) {
+    void LoadArchiveProgressDialog::SetArchiveName(const QString& name) {
         m_lblTitle->setText(tr("Opening: %1").arg(name));
     }
 
-    void LoadArchiveProgressDialog::SetStatus(const QString &status) {
+    void LoadArchiveProgressDialog::SetStatus(const QString& status) {
         m_lblStatus->setText(status);
     }
 

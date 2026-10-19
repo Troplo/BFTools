@@ -6,7 +6,7 @@
 #include <QStringList>
 
 namespace BFView::Models {
-    static QString NormalizeNavPath(const QString &path) {
+    static QString NormalizeNavPath(const QString& path) {
         if (path.isEmpty() || path == "/")
             return "/";
         QString p = path;
@@ -17,7 +17,7 @@ namespace BFView::Models {
         return p.isEmpty() ? "/" : p;
     }
 
-    NavigationHistory::NavigationHistory(QObject *parent) : QObject(parent) {}
+    NavigationHistory::NavigationHistory(QObject* parent) : QObject(parent) {}
 
     void NavigationHistory::Clear() {
         m_history.clear();
@@ -25,7 +25,7 @@ namespace BFView::Models {
         emit StateChanged(CanGoBack(), CanGoForward(), CanGoUp());
     }
 
-    void NavigationHistory::NavigateTo(const QString &path) {
+    void NavigationHistory::NavigateTo(const QString& path) {
         QString normPath = NormalizeNavPath(path);
         if (m_historyIndex >= 0 &&
             m_historyIndex < static_cast<int>(m_history.size()) &&

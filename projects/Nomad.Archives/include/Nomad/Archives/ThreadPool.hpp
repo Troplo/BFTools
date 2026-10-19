@@ -47,7 +47,7 @@ namespace Nomad::Archives {
         }
 
         template <class F, class... Args>
-        auto Enqueue(F &&f, Args &&...args)
+        auto Enqueue(F&& f, Args&&... args)
             -> std::future<std::invoke_result_t<F, Args...>> {
             using return_type = std::invoke_result_t<F, Args...>;
 
@@ -71,7 +71,7 @@ namespace Nomad::Archives {
                 m_stop = true;
             }
             m_cv.notify_all();
-            for (std::thread &worker : m_workers) {
+            for (std::thread& worker : m_workers) {
                 if (worker.joinable()) {
                     worker.join();
                 }

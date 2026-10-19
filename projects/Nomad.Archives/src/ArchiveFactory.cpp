@@ -22,7 +22,7 @@
 
 namespace Nomad::Archives {
     ArchiveVersion
-    ArchiveFactory::DetectVersion(const std::filesystem::path &fatPath) {
+    ArchiveFactory::DetectVersion(const std::filesystem::path& fatPath) {
         std::ifstream file(fatPath, std::ios::binary);
         if (!file.is_open()) {
             Logger::Warn("ArchiveFactory",
@@ -32,7 +32,7 @@ namespace Nomad::Archives {
         }
 
         uint32_t magic = 0;
-        file.read(reinterpret_cast<char *>(&magic), sizeof(magic));
+        file.read(reinterpret_cast<char*>(&magic), sizeof(magic));
         if (!file) {
             Logger::Warn("ArchiveFactory",
                          "Failed to read header magic from '{}'",
@@ -55,14 +55,14 @@ namespace Nomad::Archives {
     }
 
     uint32_t
-    ArchiveFactory::DetectRawVersion(const std::filesystem::path &fatPath) {
+    ArchiveFactory::DetectRawVersion(const std::filesystem::path& fatPath) {
         std::ifstream file(fatPath, std::ios::binary);
         if (!file.is_open()) {
             return 0;
         }
 
         uint32_t magic = 0;
-        file.read(reinterpret_cast<char *>(&magic), sizeof(magic));
+        file.read(reinterpret_cast<char*>(&magic), sizeof(magic));
         if (!file) {
             return 0;
         }
@@ -74,7 +74,7 @@ namespace Nomad::Archives {
         }
 
         uint32_t rawVersion = 0;
-        file.read(reinterpret_cast<char *>(&rawVersion), sizeof(rawVersion));
+        file.read(reinterpret_cast<char*>(&rawVersion), sizeof(rawVersion));
         if (!file) {
             return 0;
         }
@@ -117,9 +117,9 @@ namespace Nomad::Archives {
     }
 
     std::unique_ptr<IArchive>
-    ArchiveFactory::Open(const std::filesystem::path &fatPath,
-                         std::error_code &ec, const std::string &projectName,
-                         const std::filesystem::path &workspaceRoot) {
+    ArchiveFactory::Open(const std::filesystem::path& fatPath,
+                         std::error_code& ec, const std::string& projectName,
+                         const std::filesystem::path& workspaceRoot) {
         std::shared_ptr<ProjectConfig> proj;
         if (!projectName.empty()) {
             std::filesystem::path ws = workspaceRoot;
@@ -138,9 +138,9 @@ namespace Nomad::Archives {
     }
 
     std::unique_ptr<IArchive> ArchiveFactory::OpenWithProject(
-        const std::filesystem::path &fatPath, std::error_code &ec,
-        const std::shared_ptr<ProjectConfig> &project,
-        const std::filesystem::path &workspaceRoot) {
+        const std::filesystem::path& fatPath, std::error_code& ec,
+        const std::shared_ptr<ProjectConfig>& project,
+        const std::filesystem::path& workspaceRoot) {
         ZoneScopedN("ArchiveFactory::OpenWithProject");
         if (!std::filesystem::exists(fatPath)) {
             ec = std::make_error_code(std::errc::no_such_file_or_directory);
@@ -208,7 +208,7 @@ namespace Nomad::Archives {
     }
 
     bool ArchiveFactory::ApplyProject(
-        IArchive &archive, const std::shared_ptr<ProjectConfig> &project) {
+        IArchive& archive, const std::shared_ptr<ProjectConfig>& project) {
         ZoneScopedN("ArchiveFactory::ApplyProject");
         if (!project)
             return false;
@@ -220,7 +220,7 @@ namespace Nomad::Archives {
 
         project->EnsureFilelistIndexed(ver);
 
-        auto &entries = archive.GetEntries();
+        auto& entries = archive.GetEntries();
         size_t count = entries.size();
         if (count == 0)
             return true;
@@ -241,7 +241,7 @@ namespace Nomad::Archives {
             futures.push_back(
                 pool.Enqueue([&entries, &project, ver, is32, start, end]() {
                     for (size_t i = start; i < end; ++i) {
-                        auto &entry = entries[i];
+                        auto& entry = entries[i];
                         auto overridePath =
                             project->FindPathByHash(entry.name_hash, is32);
                         if (overridePath.has_value()) {
@@ -259,7 +259,7 @@ namespace Nomad::Archives {
                 }));
         }
 
-        for (auto &f : futures) {
+        for (auto& f : futures) {
             f.get();
         }
 
@@ -267,9 +267,9 @@ namespace Nomad::Archives {
     }
 
     bool
-    ArchiveFactory::ApplyProject(IArchive &archive,
-                                 const std::string &projectName,
-                                 const std::filesystem::path &workspaceRoot) {
+    ArchiveFactory::ApplyProject(IArchive& archive,
+                                 const std::string& projectName,
+                                 const std::filesystem::path& workspaceRoot) {
         if (projectName.empty())
             return false;
         auto project = ProjectManager::GetInstance().GetProject(projectName,
@@ -279,8 +279,8 @@ namespace Nomad::Archives {
         return ApplyProject(archive, project);
     }
 
-    bool ArchiveFactory::LoadNfoNames(const std::filesystem::path &nfoPath,
-                                      IArchive &archive) {
+    bool ArchiveFactory::LoadNfoNames(const std::filesystem::path& nfoPath,
+                                      IArchive& archive) {
         ZoneScopedN("ArchiveFactory::LoadNfoNames");
         pugi::xml_document doc;
         pugi::xml_parse_result result = doc.load_file(nfoPath.c_str());
@@ -340,7 +340,7 @@ namespace Nomad::Archives {
             }
         }
 
-        for (auto &entry : archive.GetEntries()) {
+        for (auto& entry : archive.GetEntries()) {
             auto it = hashMap.find(entry.name_hash);
             if (it != hashMap.end() && !it->second.empty()) {
                 entry.path = it->second;
@@ -351,10 +351,10 @@ namespace Nomad::Archives {
     }
 
     bool ArchiveFactory::LoadProjectFilelists(
-        const std::filesystem::path &workspaceRoot, IArchive &archive) {
+        const std::filesystem::path& workspaceRoot, IArchive& archive) {
         auto projects =
             ProjectManager::GetInstance().GetAvailableProjects(workspaceRoot);
-        for (const auto &projName : projects) {
+        for (const auto& projName : projects) {
             auto project = ProjectManager::GetInstance().GetProject(
                 projName, workspaceRoot);
             if (project) {

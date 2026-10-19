@@ -5,11 +5,11 @@
 #include "BFView/Models/ArchiveSortFilterProxyModel.hpp"
 
 namespace BFView::Models {
-    ArchiveSortFilterProxyModel::ArchiveSortFilterProxyModel(QObject *parent)
+    ArchiveSortFilterProxyModel::ArchiveSortFilterProxyModel(QObject* parent)
         : QSortFilterProxyModel(parent) {}
 
-    bool ArchiveSortFilterProxyModel::lessThan(const QModelIndex &left,
-                                               const QModelIndex &right) const {
+    bool ArchiveSortFilterProxyModel::lessThan(const QModelIndex& left,
+                                               const QModelIndex& right) const {
         QModelIndex leftTypeIdx =
             sourceModel()->index(left.row(), 1, left.parent());
         QModelIndex rightTypeIdx =

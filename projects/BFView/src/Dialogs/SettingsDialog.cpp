@@ -22,11 +22,11 @@
 #include <QVBoxLayout>
 
 namespace BFView {
-    SettingsDialog::SettingsDialog(QWidget *parent) : QDialog(parent) {
+    SettingsDialog::SettingsDialog(QWidget* parent) : QDialog(parent) {
         setWindowTitle(tr("Settings"));
         setMinimumWidth(520);
 
-        auto *mainLayout = new QVBoxLayout(this);
+        auto* mainLayout = new QVBoxLayout(this);
 
         // Appearance Group
         {
@@ -214,7 +214,7 @@ namespace BFView {
                 &SettingsDialog::OnRegisterAssociationNow);
 
         // Initial Load
-        const auto &settings = SettingsManager::GetInstance();
+        const auto& settings = SettingsManager::GetInstance();
         int themeIdx = m_themeCombo->findData(settings.GetAppTheme());
         if (themeIdx >= 0)
             m_themeCombo->setCurrentIndex(themeIdx);
@@ -238,8 +238,8 @@ namespace BFView {
     }
 
     void SettingsDialog::PopulateProjectCombos() {
-        auto setupCombo = [](QComboBox *combo, const QString &selectedVal,
-                             const std::vector<std::string> &projs) {
+        auto setupCombo = [](QComboBox* combo, const QString& selectedVal,
+                             const std::vector<std::string>& projs) {
             combo->clear();
             combo->addItem(tr("Always Ask"), SettingsManager::ALWAYS_ASK);
             combo->addItem(tr("None (Raw Hashes)"),
@@ -249,7 +249,7 @@ namespace BFView {
                 selectIdx = 1;
 
             int idx = 2;
-            for (const auto &p : projs) {
+            for (const auto& p : projs) {
                 QString qp = QString::fromStdString(p);
                 combo->addItem(qp, qp);
                 if (qp == selectedVal) {
@@ -266,7 +266,7 @@ namespace BFView {
 
         auto projects = Nomad::Archives::ProjectManager::GetInstance()
                             .GetAvailableProjects();
-        const auto &settings = SettingsManager::GetInstance();
+        const auto& settings = SettingsManager::GetInstance();
 
         setupCombo(m_fatv2_v7ProjectCombo,
                    settings.GetDefaultProject(
@@ -299,7 +299,7 @@ namespace BFView {
     }
 
     void SettingsDialog::PopulateCompressionCombos() {
-        auto setupCombo = [](QComboBox *combo,
+        auto setupCombo = [](QComboBox* combo,
                              Nomad::Archives::CompressionScheme selected) {
             combo->clear();
             combo->addItem(
@@ -321,7 +321,7 @@ namespace BFView {
                 combo->setCurrentIndex(idx);
         };
 
-        const auto &settings = SettingsManager::GetInstance();
+        const auto& settings = SettingsManager::GetInstance();
         setupCombo(m_fatv2_v7CompressionCombo,
                    settings.GetDefaultCompression(
                        Nomad::Archives::ArchiveVersion::FATv2, 7));
@@ -393,7 +393,7 @@ namespace BFView {
     void SettingsDialog::OnProjectsDirChanged() { PopulateProjectCombos(); }
 
     void SettingsDialog::OnAccept() {
-        auto &settings = SettingsManager::GetInstance();
+        auto& settings = SettingsManager::GetInstance();
 
         QString chosenTheme = m_themeCombo->currentData().toString();
         settings.SetAppTheme(chosenTheme);

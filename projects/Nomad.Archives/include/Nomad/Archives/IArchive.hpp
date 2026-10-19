@@ -30,17 +30,17 @@ namespace Nomad::Archives {
         [[nodiscard]] virtual uint32_t GetRawVersion() const = 0;
         virtual void SetRawVersion(uint32_t version) {}
 
-        [[nodiscard]] virtual const std::vector<ArchiveEntry> &
+        [[nodiscard]] virtual const std::vector<ArchiveEntry>&
         GetEntries() const = 0;
-        [[nodiscard]] virtual std::vector<ArchiveEntry> &GetEntries() = 0;
+        [[nodiscard]] virtual std::vector<ArchiveEntry>& GetEntries() = 0;
 
-        virtual bool Read(std::istream &stream) = 0;
-        virtual bool Write(std::ostream &stream) const = 0;
-        virtual bool SerializeNfo(std::ostream &stream) const = 0;
+        virtual bool Read(std::istream& stream) = 0;
+        virtual bool Write(std::ostream& stream) const = 0;
+        virtual bool SerializeNfo(std::ostream& stream) const = 0;
 
         [[nodiscard]] virtual ArchiveCapacityLimits
         GetCapacityLimits() const = 0;
-        [[nodiscard]] virtual bool Validate(std::string &errorMsg) const = 0;
+        [[nodiscard]] virtual bool Validate(std::string& errorMsg) const = 0;
 
         [[nodiscard]] virtual uint64_t
         ComputeNameHash(std::string_view name) const = 0;
@@ -62,7 +62,7 @@ namespace Nomad::Archives {
             return 0;
         }
 
-        virtual void AddOrUpdateEntry(const std::string &path,
+        virtual void AddOrUpdateEntry(const std::string& path,
                                       uint64_t uncompressed_size,
                                       uint64_t compressed_size,
                                       CompressionScheme compression,

@@ -49,7 +49,7 @@ static forceinline u32 loaded_u32_to_u24(u32 v) {
  * The order in which the 3 bytes will be arranged as octets in the 24 bits is
  * platform-dependent.  At least 4 bytes (not 3) must be available at @p.
  */
-static forceinline u32 load_u24_unaligned(const u8 *p) {
+static forceinline u32 load_u24_unaligned(const u8* p) {
 #if UNALIGNED_ACCESS_IS_FAST
     return loaded_u32_to_u24(load_u32_unaligned(p));
 #else
@@ -75,8 +75,8 @@ static forceinline u32 lz_hash(u32 seq, unsigned num_bits) {
  * Return the number of bytes at @matchptr that match the bytes at @strptr, up
  * to a maximum of @max_len.  Initially, @start_len bytes are matched.
  */
-static forceinline unsigned lz_extend(const u8 *const strptr,
-                                      const u8 *const matchptr,
+static forceinline unsigned lz_extend(const u8* const strptr,
+                                      const u8* const matchptr,
                                       const unsigned start_len,
                                       const unsigned max_len) {
     unsigned len = start_len;

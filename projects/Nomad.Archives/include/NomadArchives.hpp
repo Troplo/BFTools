@@ -8,8 +8,8 @@
 namespace Nomad::Archives {
     class ProjectInterface {
       public:
-        static const char *GetVersion();
-        static const char *GetBuildDate();
+        static const char* GetVersion();
+        static const char* GetBuildDate();
     };
 } // namespace Nomad::Archives
 

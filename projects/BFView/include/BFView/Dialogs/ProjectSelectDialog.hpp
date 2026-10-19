@@ -18,11 +18,11 @@ namespace BFView::Dialogs {
       public:
         explicit ProjectSelectDialog(Nomad::Archives::ArchiveVersion version,
                                      uint32_t rawVersion,
-                                     const QString &archivePath,
-                                     QWidget *parent = nullptr);
+                                     const QString& archivePath,
+                                     QWidget* parent = nullptr);
         explicit ProjectSelectDialog(Nomad::Archives::ArchiveVersion version,
-                                     const QString &archivePath,
-                                     QWidget *parent = nullptr)
+                                     const QString& archivePath,
+                                     QWidget* parent = nullptr)
             : ProjectSelectDialog(version, 0, archivePath, parent) {}
 
         [[nodiscard]] QString GetSelectedProject() const;
@@ -32,8 +32,8 @@ namespace BFView::Dialogs {
       private:
         Nomad::Archives::ArchiveVersion m_version;
         uint32_t m_rawVersion{0};
-        QComboBox *m_projectComboBox{nullptr};
-        QCheckBox *m_alwaysCheckBox{nullptr};
+        QComboBox* m_projectComboBox{nullptr};
+        QCheckBox* m_alwaysCheckBox{nullptr};
     };
 
 } // namespace BFView::Dialogs

@@ -14,17 +14,17 @@
 namespace BFView::Dialogs {
     ProjectSelectDialog::ProjectSelectDialog(
         Nomad::Archives::ArchiveVersion version, uint32_t rawVersion,
-        const QString &archivePath, QWidget *parent)
+        const QString& archivePath, QWidget* parent)
         : QDialog(parent), m_version(version), m_rawVersion(rawVersion) {
         setWindowTitle(tr("Select Project Configuration"));
         setMinimumWidth(420);
 
-        auto *mainLayout = new QVBoxLayout(this);
+        auto* mainLayout = new QVBoxLayout(this);
 
-        auto *formLayout = new QFormLayout();
+        auto* formLayout = new QFormLayout();
 
         QFileInfo fileInfo(archivePath);
-        auto *fileLabel = new QLabel(fileInfo.fileName(), this);
+        auto* fileLabel = new QLabel(fileInfo.fileName(), this);
         fileLabel->setStyleSheet("font-weight: bold;");
         formLayout->addRow(tr("Archive:"), fileLabel);
 
@@ -33,7 +33,7 @@ namespace BFView::Dialogs {
         QString verStr = (rawVersion > 0)
                              ? QString("%1 (v%2)").arg(verBase).arg(rawVersion)
                              : verBase;
-        auto *verLabel = new QLabel(verStr, this);
+        auto* verLabel = new QLabel(verStr, this);
         formLayout->addRow(tr("Detected Format:"), verLabel);
 
         m_projectComboBox = new QComboBox(this);
@@ -41,7 +41,7 @@ namespace BFView::Dialogs {
 
         auto availableProjects = Nomad::Archives::ProjectManager::GetInstance()
                                      .GetAvailableProjects();
-        for (const auto &proj : availableProjects) {
+        for (const auto& proj : availableProjects) {
             QString qProj = QString::fromStdString(proj);
             m_projectComboBox->addItem(qProj, qProj);
         }
@@ -53,7 +53,7 @@ namespace BFView::Dialogs {
             tr("Always use this project for %1 archives").arg(verStr), this);
         mainLayout->addWidget(m_alwaysCheckBox);
 
-        auto *buttonBox = new QDialogButtonBox(
+        auto* buttonBox = new QDialogButtonBox(
             QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
         connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
         connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);

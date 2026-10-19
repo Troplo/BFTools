@@ -21,22 +21,22 @@ namespace BFView::Views {
 
       public:
         using SubfolderProvider =
-            std::function<QStringList(const QString &path)>;
+            std::function<QStringList(const QString& path)>;
 
-        explicit LocationBreadcrumb(QWidget *parent = nullptr);
+        explicit LocationBreadcrumb(QWidget* parent = nullptr);
         ~LocationBreadcrumb() override = default;
 
-        void SetPath(const QString &path);
+        void SetPath(const QString& path);
         void FocusLocationInput();
         void SetSubfolderProvider(SubfolderProvider provider);
         void UpdateIcons();
 
       signals:
-        void PathClicked(const QString &fullPath);
+        void PathClicked(const QString& fullPath);
 
       protected:
-        bool eventFilter(QObject *watched, QEvent *event) override;
-        void changeEvent(QEvent *event) override;
+        bool eventFilter(QObject* watched, QEvent* event) override;
+        void changeEvent(QEvent* event) override;
 
       private:
         void SetupUi();
@@ -46,12 +46,12 @@ namespace BFView::Views {
         [[nodiscard]] QIcon GetFolderIcon() const;
         [[nodiscard]] QIcon GetRootIcon() const;
 
-        QFrame *m_containerFrame{nullptr};
-        QStackedWidget *m_stackedWidget{nullptr};
-        QScrollArea *m_scrollArea{nullptr};
-        QWidget *m_breadcrumbContainer{nullptr};
-        QHBoxLayout *m_breadcrumbLayout{nullptr};
-        QLineEdit *m_pathEdit{nullptr};
+        QFrame* m_containerFrame{nullptr};
+        QStackedWidget* m_stackedWidget{nullptr};
+        QScrollArea* m_scrollArea{nullptr};
+        QWidget* m_breadcrumbContainer{nullptr};
+        QHBoxLayout* m_breadcrumbLayout{nullptr};
+        QLineEdit* m_pathEdit{nullptr};
         QString m_currentPath{"/"};
         SubfolderProvider m_subfolderProvider;
     };

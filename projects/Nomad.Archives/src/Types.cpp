@@ -212,7 +212,7 @@ namespace Nomad::Archives {
 
     std::string NormalizePath(std::string_view path) {
         std::string result(path);
-        for (char &c : result) {
+        for (char& c : result) {
             if (c == '\\')
                 c = '/';
         }
@@ -231,7 +231,7 @@ namespace Nomad::Archives {
 
     std::string NormalizePathForHash(std::string_view path) {
         std::string result(path);
-        for (char &c : result) {
+        for (char& c : result) {
             if (c == '/')
                 c = '\\';
         }
@@ -719,11 +719,11 @@ namespace Nomad::Archives {
 
     bool ValidateArchiveEntries(std::string_view archiveName,
                                 uint32_t rawVersion,
-                                const std::vector<ArchiveEntry> &entries,
-                                const ArchiveCapacityLimits &limits,
-                                std::string &errorMsg) {
+                                const std::vector<ArchiveEntry>& entries,
+                                const ArchiveCapacityLimits& limits,
+                                std::string& errorMsg) {
         errorMsg.clear();
-        for (const auto &entry : entries) {
+        for (const auto& entry : entries) {
             std::string_view pathDesc = entry.path.empty()
                                             ? std::string_view("<unnamed>")
                                             : std::string_view(entry.path);

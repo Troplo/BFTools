@@ -186,17 +186,17 @@ TEMPLATED(hc_matchfinder_init)(struct TEMPLATED(hc_matchfinder) * mf) {
  * 'best_len' was found.
  */
 static forceinline u32 TEMPLATED(hc_matchfinder_longest_match)(
-    struct TEMPLATED(hc_matchfinder) *const mf, const u8 *const in_begin,
-    const u8 *const in_next, u32 best_len, const u32 max_len,
-    const u32 nice_len, const u32 max_search_depth, u32 *const next_hashes,
-    u32 *const offset_ret) {
+    struct TEMPLATED(hc_matchfinder) * const mf, const u8* const in_begin,
+    const u8* const in_next, u32 best_len, const u32 max_len,
+    const u32 nice_len, const u32 max_search_depth, u32* const next_hashes,
+    u32* const offset_ret) {
     u32 depth_remaining = max_search_depth;
-    const u8 *best_matchptr = in_next;
+    const u8* best_matchptr = in_next;
     mf_pos_t cur_node3, cur_node4;
     u32 hash3, hash4;
     u32 next_hashseq;
     u32 seq4;
-    const u8 *matchptr;
+    const u8* matchptr;
     u32 len;
     u32 cur_pos = in_next - in_begin;
 
@@ -344,11 +344,10 @@ out:
  *	These will be used and then updated with the precomputed hashcodes for
  *	the sequence beginning at @in_next + @count.
  */
-static forceinline void
-TEMPLATED(hc_matchfinder_skip_bytes)(struct TEMPLATED(hc_matchfinder) *const mf,
-                                     const u8 *const in_begin,
-                                     const u8 *in_next, const u8 *const in_end,
-                                     const u32 count, u32 *const next_hashes) {
+static forceinline void TEMPLATED(hc_matchfinder_skip_bytes)(
+    struct TEMPLATED(hc_matchfinder) * const mf, const u8* const in_begin,
+    const u8* in_next, const u8* const in_end, const u32 count,
+    u32* const next_hashes) {
     u32 cur_pos;
     u32 hash3, hash4;
     u32 next_hashseq;

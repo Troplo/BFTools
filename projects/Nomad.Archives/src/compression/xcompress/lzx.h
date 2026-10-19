@@ -39,20 +39,20 @@ extern "C" {
 struct lzx_state;
 
 /* create an lzx state object */
-struct lzx_state *lzx_init(int window);
+struct lzx_state* lzx_init(int window);
 
 /* destroy an lzx state object */
-void lzx_teardown(struct lzx_state *pState);
+void lzx_teardown(struct lzx_state* pState);
 
 /* reset an lzx stream */
-void lzx_reset(struct lzx_state *pState);
+void lzx_reset(struct lzx_state* pState);
 
 /* decompress an LZX compressed block */
-int lzx_decompress(struct lzx_state *pState, unsigned char *inpos,
-                   unsigned char *outpos, int inlen, int outlen);
+int lzx_decompress(struct lzx_state* pState, unsigned char* inpos,
+                   unsigned char* outpos, int inlen, int outlen);
 
 /* set header_read flag for LZX decoder */
-void lzx_set_header_read(struct lzx_state *pState, int headerRead);
+void lzx_set_header_read(struct lzx_state* pState, int headerRead);
 
 #ifdef __cplusplus
 }
