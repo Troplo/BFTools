@@ -237,7 +237,7 @@ namespace BFView {
             selection-background-color: %7;
             selection-color: %13;
         }
-        QScrollArea {
+        QScrollArea, QScrollArea #qt_scrollarea_viewport, QScrollArea > QWidget > QWidget {
             background: transparent;
             border: none;
         }
@@ -397,7 +397,7 @@ namespace BFView {
             height: 0px;
             background: none;
         }
-        QScrollBar:horizontal {
+        QScrollBar::horizontal {
             background: %4;
             height: 12px;
             margin: 0;

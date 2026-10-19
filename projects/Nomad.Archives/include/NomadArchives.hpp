@@ -10,6 +10,7 @@ namespace Nomad::Archives {
       public:
         static const char* GetVersion();
         static const char* GetBuildDate();
+        static const char* GetCommit();
     };
 } // namespace Nomad::Archives
 

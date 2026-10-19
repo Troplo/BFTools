@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(NomadArchives LANGUAGES C CXX VERSION 1.0.0)
+project(NomadArchives LANGUAGES C CXX VERSION 1.0.1)
 
 include(../../cmake/git.cmake)
 include(../../cmake/json.cmake)

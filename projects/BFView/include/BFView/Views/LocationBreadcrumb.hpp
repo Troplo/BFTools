@@ -15,6 +15,10 @@
 #include <QWidget>
 #include <functional>
 
+namespace BFView {
+    enum class AppTheme;
+}
+
 namespace BFView::Views {
     class LocationBreadcrumb : public QWidget {
         Q_OBJECT
@@ -40,6 +44,7 @@ namespace BFView::Views {
 
       private:
         void SetupUi();
+        void ApplyThemeStyle(AppTheme theme);
         void SwitchToEditablePath();
         void SwitchToBreadcrumbs();
         [[nodiscard]] QIcon GetArrowIcon() const;

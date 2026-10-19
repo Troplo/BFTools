@@ -22,45 +22,61 @@ namespace BFView::Views {
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         setFixedHeight(32);
         SetupUi();
+        ApplyThemeStyle(ThemeManager::GetInstance().GetCurrentTheme());
 
         connect(&ThemeManager::GetInstance(), &ThemeManager::ThemeChanged, this,
                 [this](AppTheme theme) {
-                    if (theme == AppTheme::System) {
-                        setStyleSheet(QStringLiteral(
-                            "QFrame#locationBarContainer {"
-                            "  background-color: palette(base);"
-                            "  border: 1px solid palette(mid);"
-                            "  border-radius: 4px;"
-                            "}"
-                            "QFrame#locationBarContainer:hover,"
-                            "QFrame#locationBarContainer[editing=\"true\"] {"
-                            "  border: 1px solid palette(highlight);"
-                            "}"
-                            "QToolButton[isBreadcrumbSegment=\"true\"], "
-                            "QToolButton[isBreadcrumbArrow=\"true\"] {"
-                            "  border: none;"
-                            "  border-radius: 3px;"
-                            "  background: transparent;"
-                            "  color: palette(text);"
-                            "  padding: 2px 6px;"
-                            "  font-size: 12px;"
-                            "}"
-                            "QLineEdit#locationPathEdit {"
-                            "  border: none;"
-                            "  background: transparent;"
-                            "  color: palette(text);"
-                            "  padding: 1px 4px;"
-                            "  font-size: 12px;"
-                            "}"
-                            "QScrollArea {"
-                            "  background: transparent;"
-                            "  border: none;"
-                            "}"));
-                    } else {
-                        setStyleSheet(QString());
-                    }
+                    ApplyThemeStyle(theme);
                     UpdateIcons();
                 });
+    }
+
+    void LocationBreadcrumb::ApplyThemeStyle(AppTheme theme) {
+        if (theme == AppTheme::System) {
+            setStyleSheet(QStringLiteral(
+                "QFrame#locationBarContainer {"
+                "  background-color: palette(base);"
+                "  border: 1px solid palette(mid);"
+                "  border-radius: 4px;"
+                "}"
+                "QFrame#locationBarContainer:hover,"
+                "QFrame#locationBarContainer[editing=\"true\"] {"
+                "  border: 1px solid palette(highlight);"
+                "}"
+                "QToolButton[isBreadcrumbSegment=\"true\"], "
+                "QToolButton[isBreadcrumbArrow=\"true\"] {"
+                "  border: none;"
+                "  border-radius: 3px;"
+                "  background: transparent;"
+                "  color: palette(text);"
+                "  padding: 2px 6px;"
+                "  font-size: 12px;"
+                "}"
+                "QToolButton[isBreadcrumbSegment=\"true\"]:hover,"
+                "QToolButton[isBreadcrumbArrow=\"true\"]:hover {"
+                "  background-color: palette(alternate-base);"
+                "}"
+                "QToolButton[isBreadcrumbSegment=\"true\"]:pressed,"
+                "QToolButton[isBreadcrumbArrow=\"true\"]:pressed {"
+                "  background-color: palette(midlight);"
+                "}"
+                "QLineEdit#locationPathEdit {"
+                "  border: none;"
+                "  background: transparent;"
+                "  color: palette(text);"
+                "  padding: 1px 4px;"
+                "  font-size: 12px;"
+                "  selection-background-color: palette(highlight);"
+                "  selection-color: palette(highlighted-text);"
+                "}"
+                "QScrollArea, QScrollArea #qt_scrollarea_viewport, QScrollArea "
+                "> QWidget > QWidget {"
+                "  background: transparent;"
+                "  border: none;"
+                "}"));
+        } else {
+            setStyleSheet(QString());
+        }
     }
 
     void LocationBreadcrumb::SetupUi() {
@@ -70,6 +86,7 @@ namespace BFView::Views {
 
         m_containerFrame = new QFrame(this);
         m_containerFrame->setObjectName(QStringLiteral("locationBarContainer"));
+        m_containerFrame->setAttribute(Qt::WA_StyledBackground, true);
         m_containerFrame->installEventFilter(this);
 
         auto* frameLayout = new QHBoxLayout(m_containerFrame);
@@ -86,11 +103,12 @@ namespace BFView::Views {
         m_scrollArea->installEventFilter(this);
         if (m_scrollArea->viewport()) {
             m_scrollArea->viewport()->installEventFilter(this);
+            m_scrollArea->viewport()->setAutoFillBackground(false);
         }
 
         m_breadcrumbContainer = new QWidget(m_scrollArea);
         m_breadcrumbContainer->installEventFilter(this);
-        m_breadcrumbContainer->setAttribute(Qt::WA_TranslucentBackground);
+        m_breadcrumbContainer->setAutoFillBackground(false);
 
         m_breadcrumbLayout = new QHBoxLayout(m_breadcrumbContainer);
         m_breadcrumbLayout->setContentsMargins(2, 0, 2, 0);
@@ -106,39 +124,6 @@ namespace BFView::Views {
 
         frameLayout->addWidget(m_stackedWidget);
         outerLayout->addWidget(m_containerFrame);
-
-        if (ThemeManager::GetInstance().GetCurrentTheme() == AppTheme::System) {
-            setStyleSheet(
-                QStringLiteral("QFrame#locationBarContainer {"
-                               "  background-color: palette(base);"
-                               "  border: 1px solid palette(mid);"
-                               "  border-radius: 4px;"
-                               "}"
-                               "QFrame#locationBarContainer:hover,"
-                               "QFrame#locationBarContainer[editing=\"true\"] {"
-                               "  border: 1px solid palette(highlight);"
-                               "}"
-                               "QToolButton[isBreadcrumbSegment=\"true\"], "
-                               "QToolButton[isBreadcrumbArrow=\"true\"] {"
-                               "  border: none;"
-                               "  border-radius: 3px;"
-                               "  background: transparent;"
-                               "  color: palette(text);"
-                               "  padding: 2px 6px;"
-                               "  font-size: 12px;"
-                               "}"
-                               "QLineEdit#locationPathEdit {"
-                               "  border: none;"
-                               "  background: transparent;"
-                               "  color: palette(text);"
-                               "  padding: 1px 4px;"
-                               "  font-size: 12px;"
-                               "}"
-                               "QScrollArea {"
-                               "  background: transparent;"
-                               "  border: none;"
-                               "}"));
-        }
 
         connect(m_pathEdit, &QLineEdit::returnPressed, this, [this]() {
             QString text = m_pathEdit->text().trimmed();
@@ -275,6 +260,9 @@ namespace BFView::Views {
             auto* arrowBtn = new QToolButton(m_breadcrumbContainer);
             arrowBtn->setProperty("isBreadcrumbArrow", true);
             arrowBtn->setIcon(arrowIcon);
+            arrowBtn->setStyleSheet(
+                "QToolButton::menu-indicator { image: none; }"
+            );
             arrowBtn->setIconSize(QSize(10, 10));
             arrowBtn->setAutoRaise(true);
             arrowBtn->setPopupMode(QToolButton::InstantPopup);
@@ -333,6 +321,8 @@ namespace BFView::Views {
 
         m_pathEdit->setText(m_currentPath);
 
+        m_breadcrumbContainer->update();
+
         QTimer::singleShot(10, this, [this]() {
             if (m_scrollArea && m_scrollArea->horizontalScrollBar()) {
                 m_scrollArea->horizontalScrollBar()->setValue(
@@ -348,6 +338,7 @@ namespace BFView::Views {
         m_containerFrame->setProperty("editing", true);
         m_containerFrame->style()->unpolish(m_containerFrame);
         m_containerFrame->style()->polish(m_containerFrame);
+        m_containerFrame->update();
         m_pathEdit->selectAll();
         m_pathEdit->setFocus();
     }
@@ -357,6 +348,7 @@ namespace BFView::Views {
         m_containerFrame->setProperty("editing", false);
         m_containerFrame->style()->unpolish(m_containerFrame);
         m_containerFrame->style()->polish(m_containerFrame);
+        m_containerFrame->update();
     }
 
     bool LocationBreadcrumb::eventFilter(QObject* watched, QEvent* event) {

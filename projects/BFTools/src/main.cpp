@@ -553,6 +553,7 @@ int main(int argc, char* argv[]) {
             std::cout << "BFTools\nVersion: "
                       << Nomad::Archives::ProjectInterface::GetVersion()
                       << "\nBuild Date: " << ProjectInterface::GetBuildDate()
+                      << "\nCommit: " << ProjectInterface::GetCommit()
                       << std::endl;
             PauseIfExplorer();
             return 0;

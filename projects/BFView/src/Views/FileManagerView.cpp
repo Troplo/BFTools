@@ -13,6 +13,7 @@
 #include <QUrl>
 #include <QVBoxLayout>
 #include <format>
+#include <functional>
 
 using namespace Nomad::Archives;
 
@@ -266,6 +267,12 @@ namespace BFView::Views {
         m_treeView->setContextMenuPolicy(Qt::CustomContextMenu);
         m_treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
         m_treeView->setSelectionMode(QAbstractItemView::SingleSelection);
+        for (int i = 1; i < Models::ArchiveTreeModel::ColumnCount; ++i) {
+            m_treeView->setColumnHidden(i, true);
+        }
+        m_treeView->header()->setSectionResizeMode(
+            Models::ArchiveTreeModel::Name, QHeaderView::Stretch);
+
         connect(m_treeView->selectionModel(),
                 &QItemSelectionModel::currentChanged, this,
                 &FileManagerView::OnTreeSelectionChanged);
@@ -324,13 +331,6 @@ namespace BFView::Views {
         m_dropOverlayLabel =
             new QLabel("Drop files or archives to add / open", this);
         m_dropOverlayLabel->setAlignment(Qt::AlignCenter);
-        m_dropOverlayLabel->setStyleSheet(
-            "background-color: rgba(30, 144, 255, 180);"
-            "color: white;"
-            "font-size: 16px;"
-            "font-weight: bold;"
-            "border: 2px dashed white;"
-            "border-radius: 8px;");
         m_dropOverlayLabel->hide();
     }
 
@@ -341,6 +341,12 @@ namespace BFView::Views {
         m_breadcrumb->SetPath("/");
         m_treeProxyModel->sort(0, Qt::AscendingOrder);
         m_contentsProxyModel->sort(0, Qt::AscendingOrder);
+
+        for (int i = 1; i < Models::ArchiveTreeModel::ColumnCount; ++i) {
+            m_treeView->setColumnHidden(i, true);
+        }
+        m_treeView->header()->setSectionResizeMode(
+            Models::ArchiveTreeModel::Name, QHeaderView::Stretch);
 
         // Expand root "/" item in the sidebar so subfolders are immediately
         // visible
@@ -377,6 +383,33 @@ namespace BFView::Views {
         }
         m_breadcrumb->SetPath(fullPath);
         emit FolderChanged(fullPath);
+
+        // Sync sidebar tree selection
+        if (m_treeModel && m_treeProxyModel && m_treeView) {
+            std::function<QModelIndex(const ArchiveNode*)> findTreeIndex =
+                [&](const ArchiveNode* node) -> QModelIndex {
+                if (!node || !m_treeModel || !m_treeModel->GetRootNode())
+                    return {};
+                if (node == m_treeModel->GetRootNode().get())
+                    return m_treeModel->index(0, 0);
+                QModelIndex parentIdx = findTreeIndex(node->parent);
+                if (!parentIdx.isValid())
+                    return {};
+                return m_treeModel->index(static_cast<int>(node->RowInParent()),
+                                          0, parentIdx);
+            };
+            QModelIndex srcIdx = findTreeIndex(folderNode);
+            if (srcIdx.isValid()) {
+                QModelIndex proxyIdx = m_treeProxyModel->mapFromSource(srcIdx);
+                if (proxyIdx.isValid()) {
+                    m_isSyncingTreeSelection = true;
+                    m_treeView->setCurrentIndex(proxyIdx);
+                    m_treeView->scrollTo(proxyIdx);
+                    m_treeView->expand(proxyIdx);
+                    m_isSyncingTreeSelection = false;
+                }
+            }
+        }
     }
 
     void FileManagerView::NavigateToPath(const QString& path) {
@@ -452,11 +485,7 @@ namespace BFView::Views {
             return;
 
         if (node->isDirectory) {
-            if (m_contentsView->isExpanded(index)) {
-                m_contentsView->collapse(index);
-            } else {
-                m_contentsView->expand(index);
-            }
+            SetCurrentFolder(node);
         } else {
             if (node->entryRef) {
                 emit RequestOpenFile(node, false, false);
