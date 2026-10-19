@@ -29,7 +29,6 @@ namespace BFView {
         QString configDir =
             QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
         QDir().mkpath(configDir);
-        std::cout << configDir.toStdString() << std::endl;
         return configDir + "/settings.json";
     }
 
